@@ -1,0 +1,1 @@
+# Problemas encontrados e soluções adotadas
