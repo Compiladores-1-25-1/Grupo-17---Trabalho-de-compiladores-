@@ -15,7 +15,7 @@ void yyerror(const char *s);
     int intValue;  /* Para armazenar valores numéricos */
 }
 
-%type <intValue> NUM
+%type <intValue> NUM expressao variavel
 
 %%
 
