@@ -19,11 +19,11 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
   - Ambiente configurado e testado (cada membro deve conseguir compilar e rodar um “hello world” com Flex/Bison).  
 
 ### **Tarefas e Atividades**  
- - []  **Definir o escopo do interpretador**: quais construções essenciais da linguagem serão suportadas (tipos de dados, operadores, estruturas de controle etc.).  
- - [ ] **Configurar repositório** (GitHub ou similar) e adicionar todos os membros (incluindo o professor: “sergioaafreitas” ou “sergiofreitas@unb.br”).  
+ - [x]  **Definir o escopo do interpretador**: quais construções essenciais da linguagem serão suportadas (tipos de dados, operadores, estruturas de controle etc.).  
+ - [x] **Configurar repositório** (GitHub ou similar) e adicionar todos os membros (incluindo o professor: “sergioaafreitas” ou “sergiofreitas@unb.br”).  
  - [ ] **Configurar ferramentas**: Flex, Bison, compilador C/C++ (ou outra linguagem) no ambiente local.  
  - [ ] **Criar gramática inicial** no Bison (arquivo `.y`) e o arquivo de regras léxicas no Flex (arquivo `.l`), ainda que incompletos.  
- - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [x] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 ---
 
 ## Sprint 2 (10/04 a 30/04)  
