@@ -103,6 +103,12 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ---
 
+## Link do Notion com o andamento das Sprints
+
+[Notion - Planejamento das Sprints](https://nutritious-soldier-9c7.notion.site/Planejamento-das-Sprints-1d9a51417e3880cf99c4d42c743b99ce)
+
+---
+
 ## Observações
 
 1. Alguns dias de aula, na quarta feira, serão utilizadas para rodar as “dailies” e revisar backlog de tarefas, mantendo transparência sobre o que cada um está fazendo, assim como para reuniões de review para demonstrar o que foi concluído e alinhar o que entra no próximo Sprint.  
@@ -117,6 +123,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 10. As entrevistas ocorrerão em 30/06 (seg) e 02/07 (qua). Falta de comparecimento pode zerar a nota da apresentação final.
 
 ### Histórico de versão
-|Versão|Data  |
-|--|--|
-| 1.0 | 03/04/2025 |
+|Versão|Data|Descrição|
+|--|--|--|
+| 1.0 | 03/04/2025 | Criação do documento de Planejamento das Sprints |
+| 1.1 | 19/04/2025 | Inclusão do link para o Notion |
