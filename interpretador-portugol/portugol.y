@@ -1,54 +1,79 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-/* Declarações explícitas para evitar warnings de funções não declaradas */
 int yylex(void);
 void yyerror(const char *s);
-
 %}
 
-/* Definições de tokens */
-%token NUM SE SENAO ENTAO FIM_SE ENQUANTO FACHA IMPRIMA LEIA
+/* Tokens com tipos associados */
+%token SE SENAO ENTAO FIM_SE
+%token ENQUANTO FACA
+%token IMPRIMA LEIA
+%token INTEIRO REAL
+
+%token <intValue> NUM_INT NUM_REAL
+%token <strValue> STRING IDENTIFICADOR
 
 %union {
-    int intValue;  /* Para armazenar valores numéricos */
+    int intValue;
+    char* strValue;
 }
 
-%type <intValue> NUM expressao variavel
+%type <intValue> expressao
 
 %%
 
-/* A gramática para o interpretador de Portugol */
 programa:
     lista_comandos
     ;
 
 lista_comandos:
-      lista_comandos comando { /* Executar o comando */ }
+    lista_comandos comando
     | comando
     ;
 
 comando:
-      SE expressao ENTAO lista_comandos FIM_SE   { printf("Comando Condicional: Se-Entao-Senao\n"); }
-    | ENQUANTO expressao FACHA lista_comandos   { printf("Comando de Repetição: Enquanto-Faca\n"); }
-    | IMPRIMA expressao                         { printf("Comando Imprimir\n"); }
-    | LEIA variavel                             { printf("Comando Leia\n"); }
+    SE expressao ENTAO lista_comandos FIM_SE
+    | SE expressao ENTAO lista_comandos SENAO lista_comandos FIM_SE
+    | ENQUANTO expressao FACA lista_comandos
+    | IMPRIMA expressao ';'
+    | IMPRIMA '(' STRING ')' ';'
+    | LEIA IDENTIFICADOR ';'
+    | declaracao
+    | atribuicao
+    ;
+
+declaracao:
+    INTEIRO IDENTIFICADOR ';'
+    | REAL IDENTIFICADOR ';'
+    ;
+
+atribuicao:
+    IDENTIFICADOR '=' expressao ';'
     ;
 
 expressao:
-      NUM                                     { $$ = $1; }
-    | expressao '+' expressao                 { $$ = $1 + $3; }
-    | expressao '-' expressao                 { $$ = $1 - $3; }
-    ;
-
-variavel:
-      'x'                                     { $$ = 10; }  /* Exemplo simplificado */
+    NUM_INT                         { $$ = $1; }
+    | NUM_REAL                      { $$ = $1; }
+    | IDENTIFICADOR                 { $$ = 0; /* valor fictício */ }
+    | expressao '+' expressao       { $$ = $1 + $3; }
+    | expressao '-' expressao       { $$ = $1 - $3; }
+    | expressao '*' expressao       { $$ = $1 * $3; }
+    | expressao '/' expressao
+        {
+            if ($3 == 0) {
+                yyerror("Divisão por zero!");
+                $$ = 0;
+            } else {
+                $$ = $1 / $3;
+            }
+        }
     ;
 
 %%
 
-/* Definição de yyerror */
 void yyerror(const char *s) {
     fprintf(stderr, "Erro sintático: %s\n", s);
 }
