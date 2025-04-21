@@ -5,11 +5,11 @@
 /* Definições de padrões de token e ações */
 %%
 
-[ \t\n]+              { /* Ignora espaços em branco, tabulações e quebras de linha */ }
+[ \t\r\n]+            { /* Ignora espaços, tabulações, quebra de linha e \r do Windows */ }
 
-[+\-]?[0-9]+          { 
+[+\-]?[0-9]+          {
                         yylval.intValue = atoi(yytext);  /* Converte para inteiro */
-                        return NUM; 
+                        return NUM_INT;
                       }
 
 "se"                  { return SE; }

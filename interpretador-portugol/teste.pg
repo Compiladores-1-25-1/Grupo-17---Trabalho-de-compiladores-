@@ -1,3 +1,3 @@
 se 5 + 3 então
-    imprima 8
+    imprima 8;
 fim-se
