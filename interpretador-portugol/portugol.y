@@ -7,19 +7,26 @@ int yylex(void);
 void yyerror(const char *s);
 %}
 
+/* Declaração de precedência */
+%left '+' '-'
+%left '*' '/'
+%right UMINUS  /* para tratar expressões com sinal negativo */
+
 /* Tokens com tipos associados */
 %token SE SENAO ENTAO FIM_SE
 %token ENQUANTO FACA
 %token IMPRIMA LEIA
 %token INTEIRO REAL
 
-%token <intValue> NUM_INT NUM_REAL
-%token <strValue> STRING IDENTIFICADOR
-
 %union {
     int intValue;
+    float floatValue;
     char* strValue;
 }
+
+%token <intValue> NUM_INT 
+%token <floatValue> NUM_REAL
+%token <strValue> STRING IDENTIFICADOR
 
 %type <intValue> expressao
 
@@ -38,8 +45,8 @@ comando:
     SE expressao ENTAO lista_comandos FIM_SE
     | SE expressao ENTAO lista_comandos SENAO lista_comandos FIM_SE
     | ENQUANTO expressao FACA lista_comandos
-    | IMPRIMA expressao ';'
-    | IMPRIMA '(' STRING ')' ';'
+    | IMPRIMA expressao ';' { printf("%d\n", $2); }
+    | IMPRIMA '(' STRING ')' ';' { printf("%s\n", $3); free($3); }
     | LEIA IDENTIFICADOR ';'
     | declaracao
     | atribuicao
@@ -70,10 +77,14 @@ expressao:
                 $$ = $1 / $3;
             }
         }
+    | '-' expressao %prec UMINUS      { $$ = -$2; }
+    | '(' expressao ')'               { $$ = $2; }
     ;
 
 %%
 
+extern char* yytext;
+
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro sintático: %s\n", s);
+    fprintf(stderr, "Erro sintático: %s próximo de '%s'\n", s, yytext);
 }

@@ -21,7 +21,7 @@
 "inteiro"       { return INTEIRO; }
 "real"          { return REAL; }
 
-[0-9]+"."[0-9]+     { yylval.intValue = (int)atof(yytext); return NUM_REAL; }
+[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }
 
 \"([^\\\"]|\\.)*\"  {
