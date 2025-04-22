@@ -9,11 +9,30 @@ imprima 10 - 2 * 3;
 
 imprima (10 - 2) * 3;
 
-imprima 5/0;
+imprima (5 / 0);
 
-inteiro i;
-i = 0;
+imprima ("suite teste");
 
-enquanto i < 10 faça
-    imprima i;
-    i = i + 1;
+se (5 < 3) então
+    imprima ("menor");
+senão
+    imprima ("maior");
+fim-se
+
+se 5 < 13 então
+    imprima ("menor");
+senão
+    imprima ("maior");
+fim-se
+
+se 55 > 13 então
+    imprima ("menor");
+senão
+    imprima ("maior");
+fim-se
+
+se 55 < 13 então
+    imprima ("menor");
+senão
+    imprima ("maior");
+fim-se

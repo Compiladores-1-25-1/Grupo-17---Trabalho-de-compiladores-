@@ -32,14 +32,14 @@
 
 [a-zA-Z_][a-zA-Z0-9_]*  { yylval.strValue = strdup(yytext); return IDENTIFICADOR; }
 
-"("             { return '('; }
-")"             { return ')'; }
-"="             { return '='; }
-";"             { return ';'; }
-"+"             { return '+'; }
-"-"             { return '-'; }
-"*"             { return '*'; }
-"/"             { return '/'; }
+"("         { return '('; }
+")"         { return ')'; }
+"="         { return '='; }
+";"         { return ';'; }
+"+"         { return '+'; }
+"-"         { return '-'; }
+"*"         { return '*'; }
+"/"         { return '/'; }
 "ou"        { return OR_LOGICO; }
 "e"         { return AND_LOGICO; }
 "não"       { return NOT_LOGICO; }

@@ -8,12 +8,20 @@ void yyerror(const char *s);
 %}
 
 /* Declaração de precedência */
+%right NOT_LOGICO NOT_BIT '~' /* mais alta: unários */
+%left OR_LOGICO
+%left AND_LOGICO
+%nonassoc IGUAL DIFERENTE
+%nonassoc MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
+%left '|'
+%left '^'
+%left '&'
 %left '+' '-'
-%left '' '*' '/' MOD
-%right UMINUS  /* para tratar expressões com sinal negativo */
+%left '*' '/' MOD
+%right UMINUS
 
 /* Tokens com tipos associados */
-%token SE SENAO ENTAO FIM_SE
+%token SE ENTAO SENAO FIM_SE 
 %token ENQUANTO FACA
 %token IMPRIMA LEIA
 %token INTEIRO REAL
@@ -47,7 +55,7 @@ lista_comandos:
     ;
 
 comando:
-    SE expressao ENTAO lista_comandos FIM_SE
+    SE expressao ENTAO lista_comandos FIM_SE 
     | SE expressao ENTAO lista_comandos SENAO lista_comandos FIM_SE
     | ENQUANTO expressao FACA lista_comandos
     | IMPRIMA expressao ';' { printf("%d\n", $2); }
@@ -77,19 +85,32 @@ expressao:
         {
             if ($3 == 0) {
                 yyerror("Divisão por zero!");
-                $$ = 0;
+                $$ = -1;
             } else {
                 $$ = $1 / $3;
             }
         }
+    | expressao MOD expressao         {$$ = $1 % $3; }
+    | expressao IGUAL expressao       { $$ = $1 == $3; }
+    | expressao DIFERENTE expressao   { $$ = $1 != $3; }
+    | expressao MAIOR expressao       { $$ = $1 > $3; }
+    | expressao MENOR expressao       { $$ = $1 < $3; }
+    | expressao MAIOR_IGUAL expressao { $$ = $1 >= $3; }
+    | expressao MENOR_IGUAL expressao { $$ = $1 <= $3; }
+    | expressao OR_LOGICO expressao   { $$ = $1 || $3; }
+    | expressao AND_LOGICO expressao  { $$ = $1 && $3; }
+    | NOT_LOGICO expressao            { $$ = !$2; }
+    | expressao '|' expressao         { $$ = $1 | $3; }
+    | expressao '&' expressao         { $$ = $1 & $3; }
+    | expressao '^' expressao         { $$ = $1 ^ $3; }
+    | NOT_BIT expressao               { $$ = ~$2; }
+    | '+' expressao                   { $$ = $2; }
     | '-' expressao %prec UMINUS      { $$ = -$2; }
     | '(' expressao ')'               { $$ = $2; }
     ;
 
 %%
 
-extern char* yytext;
-
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro sintático: %s próximo de '%s'\n", s, yytext);
+    fprintf(stderr, "Erro sintático: '%s'\n", s);
 }
