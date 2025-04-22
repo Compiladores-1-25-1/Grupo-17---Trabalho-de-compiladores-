@@ -40,6 +40,19 @@
 "-"             { return '-'; }
 "*"             { return '*'; }
 "/"             { return '/'; }
+"ou"        { return OR_LOGICO; }
+"e"         { return AND_LOGICO; }
+"não"       { return NOT_LOGICO; }
+"|"         { return OR_BIT; }
+"&"         { return AND_BIT; }
+"ˆ"         { return XOR_BIT; }
+"<>"        { return DIFERENTE; }
+">="        { return MAIOR_IGUAL; }
+"<="        { return MENOR_IGUAL; }
+">"         { return MAIOR; }
+"<"         { return MENOR; }
+"%"         { return MOD; }
+"˜"         { return NOT_BIT; }
 
 [ \t\r\n]+      { /* Ignorar espaços e quebras de linha */ }
 

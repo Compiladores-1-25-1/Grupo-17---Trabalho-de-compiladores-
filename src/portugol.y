@@ -9,7 +9,7 @@ void yyerror(const char *s);
 
 /* Declaração de precedência */
 %left '+' '-'
-%left '*' '/'
+%left '' '*' '/' MOD
 %right UMINUS  /* para tratar expressões com sinal negativo */
 
 /* Tokens com tipos associados */
@@ -17,6 +17,11 @@ void yyerror(const char *s);
 %token ENQUANTO FACA
 %token IMPRIMA LEIA
 %token INTEIRO REAL
+%token OR_LOGICO AND_LOGICO NOT_LOGICO
+%token OR_BIT AND_BIT XOR_BIT
+%token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
+%token MOD
+%token NOT_BIT
 
 %union {
     int intValue;

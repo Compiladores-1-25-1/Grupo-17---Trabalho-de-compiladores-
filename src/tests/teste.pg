@@ -1,0 +1,19 @@
+imprima 10;
+
+se 5 + 3 então
+    imprima ("resultado:");
+    imprima 8;
+fim-se
+
+imprima 10 - 2 * 3;
+
+imprima (10 - 2) * 3;
+
+imprima 5/0;
+
+inteiro i;
+i = 0;
+
+enquanto i < 10 faça
+    imprima i;
+    i = i + 1;
