@@ -13,26 +13,36 @@ imprima (5 / 0);
 
 imprima ("suite teste");
 
-se (5 < 3) então
-    imprima ("menor");
+se 5 > 3 então
+    imprima ("maior1");
+fim-se
+
+se 5 < 3 então
+    imprima ("menor2");
 senão
-    imprima ("maior");
+    imprima ("maior3");
+fim-se
+
+se 5 > 13 então
+    imprima ("menor4");
+senão
+    imprima ("maior5");
 fim-se
 
 se 5 < 13 então
-    imprima ("menor");
+    imprima ("menor6");
 senão
-    imprima ("maior");
+    imprima ("maior7");
 fim-se
 
-se 55 > 13 então
-    imprima ("menor");
+se 19 > 1 então
+    imprima ("menor8");
 senão
-    imprima ("maior");
+    imprima ("maior9");
 fim-se
 
-se 55 < 13 então
-    imprima ("menor");
+se 19 < 1 então
+    imprima ("menor8");
 senão
-    imprima ("maior");
+    imprima ("maior9");
 fim-se
