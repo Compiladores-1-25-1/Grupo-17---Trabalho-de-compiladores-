@@ -2,3 +2,4 @@
 *.tab.c
 *.tab.h
 *.out
+.venv

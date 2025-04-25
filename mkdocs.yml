@@ -1,0 +1,24 @@
+site_name: Documentação do Projeto de Compiladores
+site_url: ""
+
+site_dir: public
+theme:
+  name: material
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - header.autohide
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+extra_css:
+  - stylesheets/styles.css
+nav:
+  - Home: 
+    - Início: index.md
+  - Definição do Projeto: definicao-do-projeto.md
+  - Planejamento de Sprints: planejamento-sprints.md
+  - Decisões Técnicas: decisoes-tecnicas.md
+  - Problemas e Soluções: problemas-solucoes.md
