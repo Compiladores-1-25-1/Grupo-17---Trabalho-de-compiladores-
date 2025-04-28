@@ -127,3 +127,4 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 |--|--|--|
 | 1.0 | 03/04/2025 | Criação do documento de Planejamento das Sprints |
 | 1.1 | 19/04/2025 | Inclusão do link para o Notion |
+| 1.2 | 24/04/2025 | Atualização das tarefas da Sprint 2 |
