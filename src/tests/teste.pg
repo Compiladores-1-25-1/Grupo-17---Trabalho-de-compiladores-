@@ -1,48 +1,64 @@
+// === SUÍTE DE TESTES ===
+
+// Teste 01: Impressão simples de número
 imprima 10;
 
+// Teste 02: Condicional SE simples (5 + 3 é verdadeiro)
 se 5 + 3 então
     imprima ("resultado:");
     imprima 8;
 fim-se
 
+// Teste 03: Expressão aritmética sem parênteses (prioridade de operadores)
 imprima 10 - 2 * 3;
 
+// Teste 04: Expressão aritmética com parênteses alterando a precedência
 imprima (10 - 2) * 3;
 
+// Teste 05: Divisão por zero
 imprima (5 / 0);
 
-imprima ("suite teste");
+// Teste 06: Impressão de string simples
+imprima ("Suite de testes");
 
+// === TESTES DE COMPARAÇÃO RELACIONAL ===
+
+// Teste 07: 5 > 3 verdadeiro
 se 5 > 3 então
-    imprima ("maior1");
+    imprima ("5 é maior que 3");
 fim-se
 
+// Teste 08: 5 < 3 falso (executa SENÃO)
 se 5 < 3 então
-    imprima ("menor2");
+    imprima ("5 é menor que 3 (ERRO)");
 senão
-    imprima ("maior3");
+    imprima ("5 não é menor que 3 (OK)");
 fim-se
 
+// Teste 09: 5 > 13 falso (executa SENÃO)
 se 5 > 13 então
-    imprima ("menor4");
+    imprima ("5 é maior que 13 (ERRO)");
 senão
-    imprima ("maior5");
+    imprima ("5 não é maior que 13 (OK)");
 fim-se
 
+// Teste 10: 5 < 13 verdadeiro
 se 5 < 13 então
-    imprima ("menor6");
+    imprima ("5 é menor que 13 (OK)");
 senão
-    imprima ("maior7");
+    imprima ("5 não é menor que 13 (ERRO)");
 fim-se
 
+// Teste 11: 19 > 1 verdadeiro
 se 19 > 1 então
-    imprima ("menor8");
+    imprima ("19 é maior que 1 (OK)");
 senão
-    imprima ("maior9");
+    imprima ("19 não é maior que 1 (ERRO)");
 fim-se
 
+// Teste 12: 19 < 1 falso (executa SENÃO)
 se 19 < 1 então
-    imprima ("menor8");
+    imprima ("19 é menor que 1 (ERRO)");
 senão
-    imprima ("maior9");
+    imprima ("19 não é menor que 1 (OK)");
 fim-se
