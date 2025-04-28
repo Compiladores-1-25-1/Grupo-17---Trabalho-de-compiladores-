@@ -57,9 +57,9 @@
 
 ## 📑 Documentação 
 
-- Ponto de controle 1 
-- Apresentação 1
-- Ponto de controle 2 
-- Apresentação 2
-- Entrega final
-- Entrevista Final
+- Ponto de controle 1 <br>
+- Apresentação 1 <br>
+- Ponto de controle 2 <br> 
+- Apresentação 2 <br>
+- Entrega final <br>
+- Entrevista Final <br>
