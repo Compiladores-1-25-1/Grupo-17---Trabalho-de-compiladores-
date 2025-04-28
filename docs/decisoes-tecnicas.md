@@ -77,5 +77,5 @@ O interpretador incluirá um sistema de tratamento de erros para verificar erros
 ### Histórico de versão
 |Versão|Data  |
 |--|--|
-| 1.0 | 13/04/2025 |
+| 1.0 | 13/04/2025 | Criação do documento Decisões Técnicas |
 
