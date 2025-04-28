@@ -41,4 +41,4 @@ O interpretador implementará as seguintes funcionalidades:
 ### Histórico de versão
 |Versão|Data  |
 |--|--|
-| 1.0 | 03/04/2025 |
+| 1.0 | 03/04/2025 | Criação do documento Definição do Projeto |
