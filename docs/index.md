@@ -1,9 +1,9 @@
 # Grupo 17 - Trabalho de compiladores
-## :scroll: Sobre o projeto
+## 📜 Sobre o projeto
    Este repositório é dedicado à disciplina de Compiladores 1 ministrada pelo professor Dr. Sérgio Freitas. <br>
    A equipe optou por desenvolver um interpretador de portugol.
 
-## :star2: Contribuidores
+## 🌟 Contribuidores
 
 <center>
 <table style="margin-left: auto; margin-right: auto;">
@@ -55,7 +55,7 @@
 <hr/>
 
 
-## :bookmark_tabs: Documentação 
+## 📑 Documentação 
 
 - Ponto de controle 1 
 - Apresentação 1
