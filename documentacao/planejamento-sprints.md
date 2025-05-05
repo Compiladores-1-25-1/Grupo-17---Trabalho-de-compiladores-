@@ -35,9 +35,9 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 ### **Tarefas e Atividades**  
  - [x] **Finalizar** as expressões regulares no arquivo `.l` (tratando espaços, comentários, etc.). 
  - [x] **Desenvolver** regras sintáticas no Bison (estruturas básicas de atribuição, expressões, comandos simples).  
- - [ ] **Testar** tokens e parser em pequenos exemplos, validando o fluxo léxico-sintático.
- - [ ] **Preencher** Formulário P1
- - [ ] **Preparar** material de apresentação (P1) sobre o progresso (mostrar tokens reconhecidos e regras sintáticas iniciais).  
+ - [x] **Testar** tokens e parser em pequenos exemplos, validando o fluxo léxico-sintático.
+ - [x] **Preencher** Formulário P1
+ - [x] **Preparar** material de apresentação (P1) sobre o progresso (mostrar tokens reconhecidos e regras sintáticas iniciais).  
  - [x]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
