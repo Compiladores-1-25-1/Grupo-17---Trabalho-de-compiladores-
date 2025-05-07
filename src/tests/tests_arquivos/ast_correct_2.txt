@@ -1,0 +1,8 @@
+caractere nome
+nome <- "Socorro"
+
+caractere sobrenome 
+sobrenome <- "ajuda"
+
+imprima(nome)
+imprima(sobrenome)

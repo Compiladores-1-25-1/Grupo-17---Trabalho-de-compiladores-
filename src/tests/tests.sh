@@ -5,4 +5,10 @@ flex ../portugol.l
 
 gcc -o portugol portugol.tab.c lex.yy.c -lfl
 
-./portugol teste.pg
+for file in tests_arquivos/*.txt; do
+    echo "=========================="
+    echo "Arquivo: $file"
+    echo "--------------------------"
+    ./portugol < "$file"
+    echo ""
+done
