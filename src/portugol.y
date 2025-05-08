@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tabela.h"
 
 int yylex(void);
 void yyerror(const char *s);
@@ -122,11 +123,34 @@ comando_fim:
 
 declaracao:
     INTEIRO IDENTIFICADOR ';'
+     {
+          if (buscarSimbolo($2)) {
+              yyerror("Erro: Variável já declarada.");
+          } else {
+              inserirSimbolo($2, TIPO_INT);  
+          }
+      }
   | REAL IDENTIFICADOR ';'
+  {
+          if (buscarSimbolo($2)) {
+              yyerror("Erro: Variável já declarada.");
+          } else {
+              inserirSimbolo($2, TIPO_REAL);  // Insere a variável na tabela com tipo real
+          }
+      }
   ;
 
 atribuicao:
     IDENTIFICADOR '=' expressao ';'
+    {
+          Simbolo *s = buscarSimbolo($1);
+          if (!s) {
+              yyerror("Erro: Variável não declarada.");
+          } else {
+              // Atribuir o valor da expressão para a variável
+              // e incluir outros tipos de validação
+          }
+      }
   ;
 
 expressao:
