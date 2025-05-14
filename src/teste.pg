@@ -1,0 +1,8 @@
+inteiro x;
+real y;
+
+leia x;
+y = x * 2;
+
+imprima x;
+imprima y;

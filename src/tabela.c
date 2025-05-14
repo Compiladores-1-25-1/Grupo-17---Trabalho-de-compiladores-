@@ -3,13 +3,14 @@
 #include <string.h>
 #include "tabela.h"
 
-#define TAM 211
+
+Simbolo *tabela[211] = { NULL }; 
 
 
 unsigned hash(char *s) {
     unsigned h = 0;
     while (*s) h = (h << 4) + *s++;
-    return h % TAM;
+    return h % 211;
 }
 
 
@@ -34,7 +35,7 @@ Simbolo *buscarSimbolo(char *nome) {
 
 
 void imprimirTabela() {
-    for (int i = 0; i < TAM; i++) {
+    for (int i = 0; i < 211; i++) {
         for (Simbolo *s = tabela[i]; s; s = s->proximo) {
             printf("Nome: %s, Tipo: %s\n", s->nome, s->tipo == TIPO_INT ? "int" : "float");
         }

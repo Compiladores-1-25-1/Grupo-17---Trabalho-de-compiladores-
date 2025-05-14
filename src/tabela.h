@@ -7,12 +7,16 @@ typedef enum {TIPO_INT, TIPO_REAL} Tipo;
 
 typedef struct simbolo {
     char *nome;        
-    Tipo tipo;        
+    Tipo tipo;
+    union {
+        int intValue;
+        float floatValue;
+    } valor;        
     struct simbolo *proximo; 
 } Simbolo;
 
 
-Simbolo *tabela[211];
+extern Simbolo *tabela[211];
 
 
 unsigned hash(char *s);
