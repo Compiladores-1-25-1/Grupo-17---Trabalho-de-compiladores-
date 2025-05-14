@@ -1,0 +1,19 @@
+imprima y;
+
+imprima 10 / 0;
+
+inteiro x
+x = 10;
+
+se 10 > 2 entao
+imprima 1;
+fim-si;
+
+imprima 10 < > 5;
+
+imprima (10 + 2;
+
+imprima 10 ^^ 2;
+
+real x;
+x = "0.0";

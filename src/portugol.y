@@ -5,6 +5,9 @@
 
 int yylex(void);
 void yyerror(const char *s);
+int variavel_declarada(char *nome);
+int obter_valor_variavel(char *nome);
+void erro_semantico(const char *s);
 #define MAX_NIVEL 100
 int executando = 1;              /* flag corrente */
 int exec_stack[MAX_NIVEL];       /* armazena flags pai */
@@ -129,14 +132,21 @@ atribuicao:
 expressao:
     NUM_INT                         { $$ = $1; }
   | NUM_REAL                        { $$ = $1; }
-  | IDENTIFICADOR                   { $$ = 0; /* valor fictício */ }
+  | IDENTIFICADOR {
+      if (!variavel_declarada($1)) {
+          char mensagem[256];
+          sprintf(mensagem, "Variável '%s' não declarada.", $1);
+          erro_semantico(mensagem);
+      }
+      $$ = obter_valor_variavel($1);
+  }
   | expressao '+' expressao         { $$ = $1 + $3; }
   | expressao '-' expressao         { $$ = $1 - $3; }
   | expressao '*' expressao         { $$ = $1 * $3; }
   | expressao '/' expressao
       {
         if ($3 == 0) {
-          yyerror("Divisão por zero!");
+          erro_semantico("Divisão por zero!");
           $$ = -1;
         } else {
           $$ = $1 / $3;
@@ -163,6 +173,22 @@ expressao:
 
 %%
 
+extern int yylineno;
+extern char *yytext;
+
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro sintático: '%s'\n", s);
+    fprintf(stderr, "\033[31mErro sintático\033[0m na linha %d, próximo de '%s': %s\n", yylineno, yytext, s);
+}
+
+int variavel_declarada(char *nome) {
+    return 0;
+}
+
+int obter_valor_variavel(char *nome) {
+    return 0;
+}
+
+void erro_semantico(const char *s) {
+    fprintf(stderr, "\033[33m[Erro semântico]\033[0m na linha %d: %s\n", yylineno, s);
+    exit(1);
 }
