@@ -73,7 +73,7 @@ comando:
       }
     lista_comandos
     comando_fim
-  | ENQUANTO expressao FACA lista_comandos
+  | ENQUANTO expressao FACA lista_comandos FIM_SE
   | IMPRIMA expressao ';'
       {
         if (executando) printf("%d\n", $2);
@@ -84,6 +84,21 @@ comando:
         free($3);
       }
   | LEIA IDENTIFICADOR ';'
+    {
+        Simbolo *s = buscarSimbolo($2);
+        if (!s) {
+            yyerror("Erro: Variável não declarada.");
+        } else {
+            if (s->tipo == TIPO_INT) {
+                printf("Digite um valor inteiro para %s: ", s->nome);
+                scanf("%d", &s->valor.intValue);
+            } else if (s->tipo == TIPO_REAL) {
+                printf("Digite um valor real para %s: ", s->nome);
+                scanf("%f", &s->valor.floatValue);
+            }
+        }
+        free($2);
+    }
   | declaracao
   | atribuicao
   ;
@@ -145,11 +160,15 @@ atribuicao:
     {
           Simbolo *s = buscarSimbolo($1);
           if (!s) {
-              yyerror("Erro: Variável não declarada.");
+            yyerror("Erro: Variável não declarada.");
           } else {
-              // Atribuir o valor da expressão para a variável
-              // e incluir outros tipos de validação
+            if (s->tipo == TIPO_INT) {
+              s->valor.intValue = $3;
+            } else if (s->tipo == TIPO_REAL) {
+              s->valor.floatValue = (float) $3;
+            }
           }
+        free($1);
       }
   ;
 

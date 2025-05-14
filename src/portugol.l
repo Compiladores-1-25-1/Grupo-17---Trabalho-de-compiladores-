@@ -35,11 +35,6 @@
                   }
 
 [a-zA-Z_][a-zA-Z0-9_]* {
-    // Verifica se o identificador já foi declarado
-    Simbolo *s = buscarSimbolo(yytext);  // Procura o identificador na tabela
-    if (!s) {  // Se não encontrado, insere
-        inserirSimbolo(yytext, TIPO_INT);  // Alterar para o tipo correto conforme a necessidade
-    }
     yylval.strValue = strdup(yytext);  // Armazena o nome do identificador em yylval
     return IDENTIFICADOR;  // Retorna o token IDENTIFICADOR para o Bison
 }
