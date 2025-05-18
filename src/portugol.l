@@ -3,6 +3,8 @@
     #include <string.h>
     #include <stdlib.h>
     #include <stdio.h>
+    #include "tabela.h"
+
 
     // Para evitar warnings do yyin
     extern FILE *yyin;
@@ -18,8 +20,10 @@
 "faça"          { return FACA; }
 "imprima"       { return IMPRIMA; }
 "leia"          { return LEIA; }
-"inteiro"       { return INTEIRO; }
-"real"          { return REAL; }
+"inteiro"       {  yylval.strValue = strdup(yytext); 
+    return INTEIRO; }
+"real"          {  yylval.strValue = strdup(yytext); 
+    return REAL; }
 
 [0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }
@@ -30,7 +34,10 @@
                       return STRING;
                   }
 
-[a-zA-Z_][a-zA-Z0-9_]*  { yylval.strValue = strdup(yytext); return IDENTIFICADOR; }
+[a-zA-Z_][a-zA-Z0-9_]* {
+    yylval.strValue = strdup(yytext);  // Armazena o nome do identificador em yylval
+    return IDENTIFICADOR;  // Retorna o token IDENTIFICADOR para o Bison
+}
 
 "("         { return '('; }
 ")"         { return ')'; }
