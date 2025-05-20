@@ -14,6 +14,14 @@ int executando = 1;              /* flag corrente */
 int exec_stack[MAX_NIVEL];       /* armazena flags pai */
 int cond_stack[MAX_NIVEL];       /* armazena condição de cada if */
 int exec_sp = 0;                 /* topo da pilha */
+
+typedef struct {
+    int tipo;
+    union {
+        int intValue;
+        float floatValue;
+    };
+} Expressao;
 %}
 
 /* Declaração de precedência */
@@ -42,13 +50,14 @@ int exec_sp = 0;                 /* topo da pilha */
     int    intValue;
     float  floatValue;
     char*  strValue;
+    Expressao expr;
 }
 
 %token <intValue>    NUM_INT
 %token <floatValue>  NUM_REAL
 %token <strValue>    STRING IDENTIFICADOR
 
-%type <intValue> expressao
+%type <expr> expressao
 
 %%
 
