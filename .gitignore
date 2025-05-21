@@ -1,4 +1,30 @@
+# Arquivos gerados pelo flex/bison
 *.yy.c
 *.tab.c
 *.tab.h
+
+# Arquivos binários e executáveis
 *.out
+*.exe
+*.o
+*.obj
+*.a
+*.so
+*.dll
+portugol
+
+# Arquivos temporários
+*.swp
+*~
+*.log
+
+# Arquivos de debug
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.sublime-*
