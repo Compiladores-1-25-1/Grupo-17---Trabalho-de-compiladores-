@@ -182,51 +182,200 @@ atribuicao:
   ;
 
 expressao:
-    NUM_INT                         { $$ = $1; }
-  | NUM_REAL                        { $$ = $1; }
+    NUM_INT {
+        $$.tipo = TIPO_INT;
+        $$.intValue = $1;
+    }
+  | NUM_REAL {
+        $$.tipo = TIPO_REAL;
+        $$.floatValue = $1;
+    }
   | IDENTIFICADOR {
-      if (!variavel_declarada($1)) {
-          char mensagem[256];
-          sprintf(mensagem, "Variável '%s' não declarada.", $1);
-          erro_semantico(mensagem);
-      }
-      $$ = obter_valor_variavel($1);
-  }
-  | expressao '+' expressao         { $$ = $1 + $3; }
-  | expressao '-' expressao         { $$ = $1 - $3; }
-  | expressao '*' expressao         { $$ = $1 * $3; }
-  | expressao '/' expressao
-      {
-        if ($3 == 0) {
-          erro_semantico("Divisão por zero!");
-          $$ = -1;
-        } else {
-          $$ = $1 / $3;
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            char msg[128];
+            sprintf(msg, "Variável '%s' não declarada.", $1);
+            erro_semantico(msg);
         }
-      }
-  | expressao MOD expressao         { $$ = $1 % $3; }
-  | expressao IGUAL expressao       { $$ = $1 == $3; }
-  | expressao DIFERENTE expressao   { $$ = $1 != $3; }
-  | expressao MAIOR expressao       { $$ = $1 > $3; }
-  | expressao MENOR expressao       { $$ = $1 < $3; }
-  | expressao MAIOR_IGUAL expressao { $$ = $1 >= $3; }
-  | expressao MENOR_IGUAL expressao { $$ = $1 <= $3; }
-  | expressao OR_LOGICO expressao   { $$ = $1 || $3; }
-  | expressao AND_LOGICO expressao  { $$ = $1 && $3; }
-  | NOT_LOGICO expressao            { $$ = !$2; }
-  | expressao '|' expressao         { $$ = $1 | $3; }
-  | expressao '&' expressao         { $$ = $1 & $3; }
-  | expressao '^' expressao         { $$ = $1 ^ $3; }
-  | NOT_BIT expressao               { $$ = ~$2; }
-  | '+' expressao                   { $$ = $2; }
-  | '-' expressao %prec UMINUS      { $$ = -$2; }
-  | '(' expressao ')'               { $$ = $2; }
+        $$.tipo = s->tipo;
+        if (s->tipo == TIPO_INT) {
+            $$.intValue = s->valor.intValue;
+        } else {
+            $$.floatValue = s->valor.floatValue;
+        }
+        free($1);
+    }
+  | expressao '+' expressao {
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            $$.tipo = TIPO_REAL;
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.floatValue = v1 + v2;
+        } else {
+            $$.tipo = TIPO_INT;
+            $$.intValue = $1.intValue + $3.intValue;
+        }
+    }
+  | expressao '-' expressao {
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            $$.tipo = TIPO_REAL;
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.floatValue = v1 - v2;
+        } else {
+            $$.tipo = TIPO_INT;
+            $$.intValue = $1.intValue - $3.intValue;
+        }
+    }
+  | expressao '*' expressao {
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            $$.tipo = TIPO_REAL;
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.floatValue = v1 * v2;
+        } else {
+            $$.tipo = TIPO_INT;
+            $$.intValue = $1.intValue * $3.intValue;
+        }
+    }
+  | expressao '/' expressao {
+        float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+        if (v2 == 0) {
+            erro_semantico("Divisão por zero!");
+        }
+        $$.tipo = TIPO_REAL;
+        float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+        $$.floatValue = v1 / v2;
+    }
+  | expressao MOD expressao {
+        if ($1.tipo != TIPO_INT || $3.tipo != TIPO_INT) {
+            erro_semantico("Operador MOD requer operandos inteiros.");
+        }
+        $$.tipo = TIPO_INT;
+        $$.intValue = $1.intValue % $3.intValue;
+    }
+  | expressao IGUAL expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 == v2);
+        } else {
+            $$.intValue = ($1.intValue == $3.intValue);
+        }
+    }
+  | expressao DIFERENTE expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 != v2);
+        } else {
+            $$.intValue = ($1.intValue != $3.intValue);
+        }
+    }
+  | expressao MAIOR expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 > v2);
+        } else {
+            $$.intValue = ($1.intValue > $3.intValue);
+        }
+    }
+  | expressao MENOR expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 < v2);
+        } else {
+            $$.intValue = ($1.intValue < $3.intValue);
+        }
+    }
+  | expressao MAIOR_IGUAL expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 >= v2);
+        } else {
+            $$.intValue = ($1.intValue >= $3.intValue);
+        }
+    }
+  | expressao MENOR_IGUAL expressao {
+        $$.tipo = TIPO_INT;
+        if ($1.tipo == TIPO_REAL || $3.tipo == TIPO_REAL) {
+            float v1 = ($1.tipo == TIPO_REAL) ? $1.floatValue : $1.intValue;
+            float v2 = ($3.tipo == TIPO_REAL) ? $3.floatValue : $3.intValue;
+            $$.intValue = (v1 <= v2);
+        } else {
+            $$.intValue = ($1.intValue <= $3.intValue);
+        }
+    }
+  | expressao OR_LOGICO expressao {
+        $$.tipo = TIPO_INT;
+        $$.intValue = valor_logico($1) || valor_logico($3);
+    }
+  | expressao AND_LOGICO expressao {
+        $$.tipo = TIPO_INT;
+        $$.intValue = valor_logico($1) && valor_logico($3);
+    }
+  | NOT_LOGICO expressao {
+        $$.tipo = TIPO_INT;
+        $$.intValue = !valor_logico($2);
+    }
+  | expressao '|' expressao {
+        if ($1.tipo != TIPO_INT || $3.tipo != TIPO_INT) {
+            erro_semantico("Operação bit a bit requer inteiros.");
+        }
+        $$.tipo = TIPO_INT;
+        $$.intValue = $1.intValue | $3.intValue;
+    }
+  | expressao '&' expressao {
+        if ($1.tipo != TIPO_INT || $3.tipo != TIPO_INT) {
+            erro_semantico("Operação bit a bit requer inteiros.");
+        }
+        $$.tipo = TIPO_INT;
+        $$.intValue = $1.intValue & $3.intValue;
+    }
+  | expressao '^' expressao {
+        if ($1.tipo != TIPO_INT || $3.tipo != TIPO_INT) {
+            erro_semantico("Operação bit a bit requer inteiros.");
+        }
+        $$.tipo = TIPO_INT;
+        $$.intValue = $1.intValue ^ $3.intValue;
+    }
+  | NOT_BIT expressao {
+        if ($2.tipo != TIPO_INT) {
+            erro_semantico("Operação bit a bit requer inteiro.");
+        }
+        $$.tipo = TIPO_INT;
+        $$.intValue = ~$2.intValue;
+    }
+  | '-' expressao %prec UMINUS {
+        if ($2.tipo == TIPO_INT) {
+            $$.tipo = TIPO_INT;
+            $$.intValue = -$2.intValue;
+        } else {
+            $$.tipo = TIPO_REAL;
+            $$.floatValue = -$2.floatValue;
+        }
+    }
+  | '(' expressao ')' {
+        $$ = $2;
+    }
   ;
 
 %%
 
 extern int yylineno;
 extern char *yytext;
+
+int valor_logico(Expressao e) {
+    return (e.tipo == TIPO_REAL) ? e.floatValue != 0.0 : e.intValue != 0;
+}
 
 void yyerror(const char *s) {
     fprintf(stderr, "\033[31mErro sintático\033[0m na linha %d, próximo de '%s': %s\n", yylineno, yytext, s);
