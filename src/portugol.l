@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
     #include "portugol.tab.h"
     #include <string.h>
@@ -8,6 +10,7 @@
 
     // Para evitar warnings do yyin
     extern FILE *yyin;
+    extern int yylineno;
 %}
 
 %%

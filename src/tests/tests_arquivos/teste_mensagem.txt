@@ -1,4 +1,5 @@
-imprima y;
+imprima 10 - 2 * 3;
+
 
 imprima 10 / 0;
 
