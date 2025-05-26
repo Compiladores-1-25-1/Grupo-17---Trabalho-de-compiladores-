@@ -66,7 +66,7 @@
 
 [ \t\r\n]+      { /* Ignorar espaços e quebras de linha */ }
 
-. { fprintf(stderr, "\033[31mErro léxico\033[0m na linha %d: Caractere inválido '%s'\n", yylineno, yytext); return 0; }
+. { fprintf(stderr, "\033[31mErro lexico\033[0m na linha %d: Caractere invalido '%s'\n", yylineno, yytext); return 0; }
 
 
 %%

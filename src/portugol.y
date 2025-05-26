@@ -87,7 +87,7 @@ comando:
     {
         Simbolo *s = buscarSimbolo($2);
         if (!s) {
-            yyerror("Erro: Variável não declarada.");
+            yyerror("Erro: Variavel nao declarada.");
         } else {
             if (s->tipo == TIPO_INT) {
                 printf("Digite um valor inteiro para %s: ", s->nome);
@@ -140,7 +140,7 @@ declaracao:
     INTEIRO IDENTIFICADOR ';'
      {
           if (buscarSimbolo($2)) {
-              yyerror("Erro: Variável já declarada.");
+              yyerror("Erro: Variavel ja declarada.");
           } else {
               inserirSimbolo($2, TIPO_INT);  
           }
@@ -148,7 +148,7 @@ declaracao:
   | REAL IDENTIFICADOR ';'
   {
           if (buscarSimbolo($2)) {
-              yyerror("Erro: Variável já declarada.");
+              yyerror("Erro: Variavel ja declarada.");
           } else {
               inserirSimbolo($2, TIPO_REAL);  // Insere a variável na tabela com tipo real
           }
@@ -160,7 +160,7 @@ atribuicao:
     {
           Simbolo *s = buscarSimbolo($1);
           if (!s) {
-            yyerror("Erro: Variável não declarada.");
+            yyerror("Erro: Variavel nao declarada.");
           } else {
             if (s->tipo == TIPO_INT) {
               s->valor.intValue = $3;
@@ -178,7 +178,7 @@ expressao:
   | IDENTIFICADOR {
       if (!variavel_declarada($1)) {
           char mensagem[256];
-          sprintf(mensagem, "Variável '%s' não declarada.", $1);
+          sprintf(mensagem, "Variavel '%s' nao declarada.", $1);
           erro_semantico(mensagem);
       }
       $$ = obter_valor_variavel($1);
@@ -189,7 +189,7 @@ expressao:
   | expressao '/' expressao
       {
         if ($3 == 0) {
-          erro_semantico("Divisão por zero!");
+          erro_semantico("Divisao por zero!");
           $$ = -1;
         } else {
           $$ = $1 / $3;
@@ -220,7 +220,7 @@ extern int yylineno;
 extern char *yytext;
 
 void yyerror(const char *s) {
-    fprintf(stderr, "\033[31mErro sintático\033[0m na linha %d, próximo de '%s': %s\n", yylineno, yytext, s);
+    fprintf(stderr, "\033[31mErro sintatico\033[0m na linha %d, proximo de '%s': %s\n", yylineno, yytext, s);
 }
 
 int variavel_declarada(char *nome) {
@@ -232,6 +232,6 @@ int obter_valor_variavel(char *nome) {
 }
 
 void erro_semantico(const char *s) {
-    fprintf(stderr, "\033[33m[Erro semântico]\033[0m na linha %d: %s\n", yylineno, s);
+    fprintf(stderr, "\033[33m[Erro semantico]\033[0m na linha %d: %s\n", yylineno, s);
     exit(1);
 }
