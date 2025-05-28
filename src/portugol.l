@@ -27,6 +27,8 @@
     return INTEIRO; }
 "real"          {  yylval.strValue = strdup(yytext); 
     return REAL; }
+"string"          {  yylval.strValue = strdup(yytext); 
+    return STRING; }
 
 [0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tabela.h"
-
+#include "tipos.h"
 
 Simbolo *tabela[211] = { NULL }; 
 
@@ -37,7 +37,7 @@ Simbolo *buscarSimbolo(char *nome) {
 void imprimirTabela() {
     for (int i = 0; i < 211; i++) {
         for (Simbolo *s = tabela[i]; s; s = s->proximo) {
-            printf("Nome: %s, Tipo: %s\n", s->nome, s->tipo == TIPO_INT ? "int" : "float");
+            printf("Nome: %s, Tipo: %s\n", s->nome, s->tipo == TIPO_INT ? "int" : (TIPO_REAL ? "float" : "string"));
         }
     }
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tabela.h"
+#include "ast.h"
 
 int yylex(void);
 void yyerror(const char *s);
@@ -16,10 +17,15 @@ int cond_stack[MAX_NIVEL];       /* armazena condição de cada if */
 int exec_sp = 0;                 /* topo da pilha */
 %}
 
+%code requires {
+#include "ast.h"
+}
+
 /* Declaração de precedência */
 %right NOT_LOGICO NOT_BIT '~'     /* unários */
 %left OR_LOGICO
 %left AND_LOGICO
+
 %nonassoc IGUAL DIFERENTE
 %nonassoc MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
 %nonassoc SENAO                   /* resolve dangling-else */
@@ -32,7 +38,7 @@ int exec_sp = 0;                 /* topo da pilha */
 
 /* Tokens e tipos associados */
 %token SE ENTAO SENAO FIM_SE
-%token ENQUANTO FACA IMPRIMA LEIA INTEIRO REAL
+%token ENQUANTO FACA IMPRIMA LEIA
 %token OR_LOGICO AND_LOGICO NOT_LOGICO
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
@@ -42,159 +48,118 @@ int exec_sp = 0;                 /* topo da pilha */
     int    intValue;
     float  floatValue;
     char*  strValue;
+    NoAST *no;
+    Tipo   tipo;
 }
 
-%token <intValue>    NUM_INT
-%token <floatValue>  NUM_REAL
-%token <strValue>    STRING IDENTIFICADOR
+/* Tokens com valores associados */
+%token <intValue>    NUM_INT INTEIRO
+%token <floatValue>  NUM_REAL REAL
+%token <strValue>    IDENTIFICADOR STRING
 
-%type <intValue> expressao
+/* Tipos de regras */
+%type <intValue>     expressao
+%type <no>           expr stmt
+%type <tipo> tipo_var
 
 %%
 
 programa:
     lista_comandos
-  ;
+  | input
+;
 
 lista_comandos:
     lista_comandos comando
   | comando
-  ;
+;
+
+tipo_var:
+    INTEIRO { $$ = TIPO_INT; }
+  | REAL    { $$ = TIPO_REAL; }
+  | STRING  { $$ = TIPO_STRING; }
+;
+
 
 comando:
-    /* if (sem ou com else) */
-    SE expressao ENTAO
-      {
-        /* push no estado */
+    /* IF com ou sem ELSE */
+    SE expressao ENTAO {
         exec_stack[exec_sp] = executando;
         cond_stack[exec_sp] = $2;
         executando = executando && $2;
         exec_sp++;
-      }
-    lista_comandos
-    comando_fim
+    }
+    lista_comandos comando_fim
+
   | ENQUANTO expressao FACA lista_comandos FIM_SE
-  | IMPRIMA expressao ';'
-      {
+
+  | IMPRIMA expressao ';' {
         if (executando) printf("%d\n", $2);
-      }
-  | IMPRIMA '(' STRING ')' ';'
-      {
+    }
+
+  | IMPRIMA '(' STRING ')' ';' {
         if (executando) printf("%s\n", $3);
         free($3);
-      }
-  | LEIA IDENTIFICADOR ';'
-    {
+    }
+
+  | LEIA IDENTIFICADOR ';' {
         Simbolo *s = buscarSimbolo($2);
         if (!s) {
             yyerror("Erro: Variavel nao declarada.");
-        } else {
-            if (s->tipo == TIPO_INT) {
-                printf("Digite um valor inteiro para %s: ", s->nome);
-                scanf("%d", &s->valor.intValue);
-            } else if (s->tipo == TIPO_REAL) {
-                printf("Digite um valor real para %s: ", s->nome);
-                scanf("%f", &s->valor.floatValue);
-            }
+        } else if (s->tipo == TIPO_INT) {
+            printf("Digite um valor inteiro para %s: ", s->nome);
+            scanf("%d", &s->valor.intValue);
+        } else if (s->tipo == TIPO_REAL) {
+            printf("Digite um valor real para %s: ", s->nome);
+            scanf("%f", &s->valor.floatValue);
+        } else if (s->tipo == TIPO_STRING) {
+          printf("Digite um valor string para %s: ", s->nome);
+          s->valor.strValue = malloc(256);  // aloca memória
+          if (!s->valor.strValue) {
+              yyerror("Erro ao alocar memória para string.");
+          } else {
+              scanf("%255s", s->valor.strValue);  // limita a entrada
+          }
         }
         free($2);
     }
-  | declaracao
-  | atribuicao
-  ;
+;
 
 comando_fim:
-    /* — ramo COM ELSE — */
-    SENAO
-      {
+    /* ELSE */
+    SENAO {
+        exec_sp--;
+        executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
+        exec_stack[exec_sp] = exec_stack[exec_sp];
+        exec_sp++;
+    }
+    lista_comandos FIM_SE {
+        exec_sp--;
+        executando = exec_stack[exec_sp];
+    }
 
-       /* sai do then */
-       exec_sp--;
-       /* calcula flag para o else (pai && !cond) */
-       {
-         int pai  = exec_stack[exec_sp];
-         int cond = cond_stack[exec_sp];
-         executando = pai && !cond;
-       }
-       /* empilha de novo o estado pai para o pop final */
-       exec_stack[exec_sp] = exec_stack[exec_sp];
-       exec_sp++;
-      }
-    lista_comandos FIM_SE
-      {
+  | FIM_SE {
+        exec_sp--;
+        executando = exec_stack[exec_sp];
+    }
+;
 
-       /* pop final após o bloco else */
-       exec_sp--;
-       executando = exec_stack[exec_sp];
-      }
-  | /* — ramo SEM ELSE — */
-    FIM_SE
-      {
-       /* pop e restaura flag pai */
-       exec_sp--;
-       executando = exec_stack[exec_sp];
-      }
-  ;
-
-declaracao:
-    INTEIRO IDENTIFICADOR ';'
-     {
-          if (buscarSimbolo($2)) {
-              yyerror("Erro: Variavel ja declarada.");
-          } else {
-              inserirSimbolo($2, TIPO_INT);  
-          }
-      }
-  | REAL IDENTIFICADOR ';'
-  {
-          if (buscarSimbolo($2)) {
-              yyerror("Erro: Variavel ja declarada.");
-          } else {
-              inserirSimbolo($2, TIPO_REAL);  // Insere a variável na tabela com tipo real
-          }
-      }
-  ;
-
-atribuicao:
-    IDENTIFICADOR '=' expressao ';'
-    {
-          Simbolo *s = buscarSimbolo($1);
-          if (!s) {
-            yyerror("Erro: Variavel nao declarada.");
-          } else {
-            if (s->tipo == TIPO_INT) {
-              s->valor.intValue = $3;
-            } else if (s->tipo == TIPO_REAL) {
-              s->valor.floatValue = (float) $3;
-            }
-          }
-        free($1);
-      }
-  ;
 
 expressao:
     NUM_INT                         { $$ = $1; }
   | NUM_REAL                        { $$ = $1; }
-  | IDENTIFICADOR {
-      if (!variavel_declarada($1)) {
-          char mensagem[256];
-          sprintf(mensagem, "Variavel '%s' nao declarada.", $1);
-          erro_semantico(mensagem);
-      }
-      $$ = obter_valor_variavel($1);
-  }
   | expressao '+' expressao         { $$ = $1 + $3; }
   | expressao '-' expressao         { $$ = $1 - $3; }
   | expressao '*' expressao         { $$ = $1 * $3; }
-  | expressao '/' expressao
-      {
+  | expressao '/' expressao {
         if ($3 == 0) {
-          erro_semantico("Divisao por zero!");
-          $$ = -1;
+            erro_semantico("Divisao por zero!");
+            $$ = -1;
         } else {
-          $$ = $1 / $3;
+            $$ = $1 / $3;
         }
-      }
+    }
+
   | expressao MOD expressao         { $$ = $1 % $3; }
   | expressao IGUAL expressao       { $$ = $1 == $3; }
   | expressao DIFERENTE expressao   { $$ = $1 != $3; }
@@ -205,14 +170,76 @@ expressao:
   | expressao OR_LOGICO expressao   { $$ = $1 || $3; }
   | expressao AND_LOGICO expressao  { $$ = $1 && $3; }
   | NOT_LOGICO expressao            { $$ = !$2; }
+
   | expressao '|' expressao         { $$ = $1 | $3; }
   | expressao '&' expressao         { $$ = $1 & $3; }
   | expressao '^' expressao         { $$ = $1 ^ $3; }
   | NOT_BIT expressao               { $$ = ~$2; }
+
   | '+' expressao                   { $$ = $2; }
   | '-' expressao %prec UMINUS      { $$ = -$2; }
+
   | '(' expressao ')'               { $$ = $2; }
-  ;
+;
+
+input:
+    /* vazio */
+  | input stmt '\n'
+  | input stmt
+;
+
+stmt:
+    tipo_var IDENTIFICADOR {
+        if (buscarSimbolo($2)) yyerror("Redeclaracao de variavel");
+        else inserirSimbolo($2, $1);
+        $$ = NULL;
+    }
+  | IDENTIFICADOR '=' expr {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("ID nao declarado");
+            $$ = criarNoNum(0);
+        } else {
+            $$ = criarNoOp('=', criarNoId($1, s->tipo), $3);
+        }
+        printf("\nAST: ");
+        imprimirAST($$);
+    }
+
+  | expr {
+        $$ = $1;
+        printf("\nAST: ");
+        imprimirAST($$);
+    }
+;
+
+expr:
+    expr '+' expr {
+        if (!tiposCompativeis($1->tipo, $3->tipo))
+            yyerror("Tipos incompativeis para '+'");
+        $$ = criarNoOp('+', $1, $3);
+    }
+
+  | expr '-' expr {
+        if (!tiposCompativeis($1->tipo, $3->tipo))
+            yyerror("Tipos incompativeis para '-'");
+        $$ = criarNoOp('-', $1, $3);
+    }
+
+  | NUM_INT { $$ = criarNoNum($1); }
+  | NUM_REAL { $$ = criarNoNum($1); }
+
+  | IDENTIFICADOR {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("ID nao declarado");
+            $$ = criarNoNum(0);
+        } else {
+            $$ = criarNoId($1, s->tipo);
+        }
+    }
+;
+
 
 %%
 

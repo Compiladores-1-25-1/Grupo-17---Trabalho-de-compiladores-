@@ -1,19 +1,19 @@
 #ifndef TABELA_H
 #define TABELA_H
+#include "ast.h"
+#include "tipos.h"
+// typedef enum {TIPO_INT, TIPO_REAL} Tipo;
 
 
-typedef enum {TIPO_INT, TIPO_REAL} Tipo;
-
-
-typedef struct simbolo {
-    char *nome;        
-    Tipo tipo;
-    union {
-        int intValue;
-        float floatValue;
-    } valor;        
-    struct simbolo *proximo; 
-} Simbolo;
+// typedef struct simbolo {
+//     char *nome;        
+//     Tipo tipo;
+//     union {
+//         int intValue;
+//         float floatValue;
+//     } valor;        
+//     struct simbolo *proximo; 
+// } Simbolo;
 
 
 extern Simbolo *tabela[211];
