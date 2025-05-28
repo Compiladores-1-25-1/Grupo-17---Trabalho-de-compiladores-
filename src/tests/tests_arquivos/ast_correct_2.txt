@@ -1,8 +1,8 @@
 caractere nome
-nome <- "Socorro"
+nome = "Socorro"
 
 caractere sobrenome 
-sobrenome <- "ajuda"
+sobrenome = "ajuda"
 
 imprima(nome)
 imprima(sobrenome)

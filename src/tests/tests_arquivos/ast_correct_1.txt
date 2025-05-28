@@ -1,10 +1,10 @@
 inteiro x
-x <- 0
+x = 0
 
 inteiro y
-y <- 10
+y = 10
 
 real media
-media <- (x + y) / 2
+media = x + y
 
 imprima(media)
