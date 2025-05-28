@@ -30,8 +30,8 @@
 "string"          {  yylval.strValue = strdup(yytext); 
     return STRING; }
 
-[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
-[0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }
+[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
+[0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
 \"([^\\\"]|\\.)*\"  {
                       yytext[yyleng - 1] = '\0';                // Remove aspa final
