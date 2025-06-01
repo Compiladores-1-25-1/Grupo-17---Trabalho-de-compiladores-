@@ -73,9 +73,59 @@ Como solução foi adicionada uma nova produção à regra `expressao` no arquiv
 
 Com essa modificação, o parser passa a aceitar expressões do tipo `x + y`, onde `x` e `y` são variáveis previamente declaradas e atribuídas, permitindo o uso mais realista de variáveis em expressões matemáticas no interpretador.
 
+## 4. Strings Não Reconhecidas
+Durante a validação e teste do código, foi encontrado o erro em que variáveis do tipo caractere não estavam reconhecendo as strings recebidas como um dado a ser guardado, causando um erro de síntaxe.
 
 ## Conclusão
 As principais dificuldades enfrentadas no desenvolvimento do interpretador de Portugol estavam relacionadas a conflitos de análise sintática e a correta implementação do fluxo de execução de comandos condicionais. As soluções adotadas envolveram ajustes na gramática para evitar ambiguidade e implementação de pilhas para controle de execução. Essas correções permitiram que o interpretador fosse capaz de processar corretamente os programas escritos em Portugol.
+
+```portugol
+caractere nome;
+nome = "Socorro";
+```
+
+### **Solução Encontrada**
+
+Como solução para esse problema, foi adicionado um novo bloco de regras `expressao_string`, no arquivo `portugol.y` que continha todas as condições e regras para o funcionamento do recebimento de strings por variáveis.
+
+````Portugol
+expressao_string:
+    STRING { $$ = strdup($1); }
+  | IDENTIFICADOR {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("Variavel nao declarada.");
+            $$ = strdup("");
+        } else if (s->tipo == TIPO_STRING) {
+            $$ = strdup(s->valor.strValue);
+        } else {
+            yyerror("Tipo nao string em expressao string.");
+            $$ = strdup("");
+        }
+        free($1);
+    }
+;
+````
+
+Também foi adicionado o tipo de variável string a condição de impressão que permitiu o código a imprimir no terminal as variáveis do tipo caractere quando chamadas.
+
+````Portugol
+| IMPRIMA IDENTIFICADOR ';' {
+        if (executando) {
+            Simbolo *s = buscarSimbolo($2);
+            if (!s) {
+                yyerror("Erro: Variavel nao declarada.");
+            } else if (s->tipo == TIPO_INT) {
+                printf("%d\n", s->valor.intValue);
+            } else if (s->tipo == TIPO_REAL) {
+                printf("%f\n", s->valor.floatValue);
+            } else if (s->tipo == TIPO_STRING) {
+                printf("%s\n", s->valor.strValue);
+            }
+        }
+        free($2);
+    }
+````
 
 ### Histórico de versão
 |Versão|Data|Descrição|
