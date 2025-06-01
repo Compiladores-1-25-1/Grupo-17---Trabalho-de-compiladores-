@@ -34,6 +34,46 @@ Uso de pilhas (exec_stack e cond_stack) para controle de execução dentro dos b
 
 Correção do tratamento do comando `SENAO`: O comando `SENAO` foi tratado de forma que, ao ser executado, ele reverte o estado da execução para garantir que apenas o ramo correto seja executado. A pilha `exec_stack` foi usada para armazenar o estado do "pai", enquanto `cond_stack` mantinha o estado das condições, permitindo alternar corretamente entre os blocos `SE` e `SENAO`.
 
+## 3. Identificadores Não Reconhecidos em Expressões do Parser
+
+Durante os testes com expressões envolvendo variáveis, como o exemplo abaixo, foi detectado um erro sintático na linha onde ocorre a atribuição `media = (x + y);`. O analisador sintático (parser) não reconhecia identificadores `(x, y)` como operandos válidos em expressões aritméticas. Isso ocorria porque a gramática do parser (`portugol.y`) não contemplava a possibilidade de IDENTIFICADORES serem utilizados dentro da regra `expressao`.
+
+```portugol
+inteiro x;
+x = 0;
+
+inteiro y;
+y = 10;
+
+real media;
+media = (x + y);
+```
+
+### **Solução Encontrada**
+
+Como solução foi adicionada uma nova produção à regra `expressao` no arquivo `portugol.y` para permitir o uso de variáveis já declaradas nas operações. A nova produção trata a recuperação do valor do identificador de acordo com o seu tipo, acessando a tabela de símbolos. A regra adicionada foi:
+
+```portugol
+| IDENTIFICADOR {
+    Simbolo *s = buscarSimbolo($1);
+    if (!s) {
+        yyerror("Variavel nao declarada.");
+        $$ = 0;
+    } else if (s->tipo == TIPO_INT) {
+        $$ = s->valor.intValue;
+    } else if (s->tipo == TIPO_REAL) {
+        $$ = s->valor.floatValue;
+    } else {
+        yyerror("Tipo nao suportado em expressao.");
+        $$ = 0;
+    }
+    free($1);
+}
+```
+
+Com essa modificação, o parser passa a aceitar expressões do tipo `x + y`, onde `x` e `y` são variáveis previamente declaradas e atribuídas, permitindo o uso mais realista de variáveis em expressões matemáticas no interpretador.
+
+
 ## Conclusão
 As principais dificuldades enfrentadas no desenvolvimento do interpretador de Portugol estavam relacionadas a conflitos de análise sintática e a correta implementação do fluxo de execução de comandos condicionais. As soluções adotadas envolveram ajustes na gramática para evitar ambiguidade e implementação de pilhas para controle de execução. Essas correções permitiram que o interpretador fosse capaz de processar corretamente os programas escritos em Portugol.
 
@@ -41,3 +81,5 @@ As principais dificuldades enfrentadas no desenvolvimento do interpretador de Po
 |Versão|Data|Descrição|
 |--|--|--|
 | 1.0 | 28/04/2025 | Criação do documento de Problemas e soluções encontrados |
+| 1.1 | 01/06/2025 | Adição dos Problemas e Soluções das sprints 3 e 4 |
+
