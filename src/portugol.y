@@ -89,7 +89,9 @@ comando:
         if (!s) {
             yyerror("ID nao declarado");
         } else {
-            s->valor.intValue = $3; // ou trate tipo aqui
+            if (s->tipo == TIPO_INT) s->valor.intValue = $3;
+            else if (s->tipo == TIPO_REAL) s->valor.floatValue = $3;
+            else yyerror("Atribuicao invalida a tipo nao suportado.");
         }
         free($1);
     }
@@ -196,6 +198,21 @@ expressao:
   | INTEIRO                         { $$ = $1; }
   | REAL                            { $$ = $1; }
   | '(' expressao ')'               { $$ = $2; }
+  | IDENTIFICADOR {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("Variavel nao declarada.");
+            $$ = 0;
+        } else if (s->tipo == TIPO_INT) {
+            $$ = s->valor.intValue;
+        } else if (s->tipo == TIPO_REAL) {
+            $$ = s->valor.floatValue;
+        } else {
+            yyerror("Tipo nao suportado em expressao.");
+            $$ = 0;
+        }
+        free($1);
+    }
 ;
 
 %%
