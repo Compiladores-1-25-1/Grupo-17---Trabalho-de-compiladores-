@@ -50,10 +50,10 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
    - [ ] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
-   - [ ] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
-   - [ ] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
-   - [ ] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
-   - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues. 
+   - [x] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
+   - [x] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
+   - [x] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
+   - [x]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues. 
 ---
 
 ## Sprint 4 (15/05 a 04/06)  
@@ -67,8 +67,8 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
  - [ ]  **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
  - [ ] **Consolidar** estruturas de controle (if, while, etc.), garantindo que a AST as represente adequadamente.  
  - [ ] **Testar** o interpretador com programas de exemplo que demonstrem a execução de comandos básicos.  
- - [ ] **Preencher** Formulário P2
- - [ ] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
+ - [x] **Preencher** Formulário P2
+ - [x] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
  - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
  
 ---
