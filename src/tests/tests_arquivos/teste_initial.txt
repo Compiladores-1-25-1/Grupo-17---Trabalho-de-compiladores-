@@ -10,7 +10,7 @@ imprima 10 - 2 * 3;
 
 imprima (10 - 2) * 3;
 
-imprima (5 / 0);
+
 
 imprima ("Suite de testes");
 
@@ -47,3 +47,5 @@ se 19 < 1 então
 senão
     imprima ("19 não é menor que 1 (OK)");
 fim-se
+
+imprima (5 / 0);

@@ -27,15 +27,19 @@
     return INTEIRO; }
 "real"          {  yylval.strValue = strdup(yytext); 
     return REAL; }
+"string"          {  yylval.strValue = strdup(yytext); 
+    return STRING; }
+"caractere"          {  yylval.strValue = strdup(yytext); 
+    return CARACTERE; }
 
-[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
-[0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }
+[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
+[0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
 \"([^\\\"]|\\.)*\"  {
-                      yytext[yyleng - 1] = '\0';                // Remove aspa final
-                      yylval.strValue = strdup(yytext + 1);     // Remove aspa inicial
-                      return STRING;
-                  }
+    yytext[yyleng - 1] = '\0';                // Remove aspa final
+    yylval.strValue = strdup(yytext + 1);     // Remove aspa inicial
+    return STRING;  // Alterado de CARACTERE para STRING
+}
 
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.strValue = strdup(yytext);  // Armazena o nome do identificador em yylval
