@@ -41,7 +41,6 @@ int exec_sp = 0;                 /* topo da pilha */
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
 %token MOD NOT_BIT
-%token CARACTERE
 
 %union {
     int    intValue;
@@ -54,11 +53,12 @@ int exec_sp = 0;                 /* topo da pilha */
 /* Tokens com valores associados */
 %token <intValue>    INTEIRO
 %token <floatValue>  REAL
-%token <strValue>    IDENTIFICADOR STRING
+%token <strValue>    IDENTIFICADOR STRING CARACTERE
 
 /* Tipos de regras */
 %type <intValue>     expressao
-%type <tipo> tipo_var
+%type <strValue>     expressao_string
+%type <tipo>         tipo_var
 
 %%
 
@@ -95,8 +95,25 @@ comando:
         }
         free($1);
     }
+  | IDENTIFICADOR '=' expressao_string ';' {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("ID nao declarado");
+        } else if (s->tipo == TIPO_STRING) {
+            if (s->valor.strValue) free(s->valor.strValue);
+            s->valor.strValue = strdup($3);
+        } else {
+            yyerror("Atribuicao de string a tipo nao string");
+        }
+        free($1);
+        free($3);
+    }
   | IMPRIMA expressao ';' {
         if (executando) printf("%d\n", $2);
+    }
+  | IMPRIMA expressao_string ';' {
+        if (executando) printf("%s\n", $2);
+        free($2);
     }
   | IMPRIMA IDENTIFICADOR ';' {
         if (executando) {
@@ -210,6 +227,23 @@ expressao:
         } else {
             yyerror("Tipo nao suportado em expressao.");
             $$ = 0;
+        }
+        free($1);
+    }
+;
+
+expressao_string:
+    STRING { $$ = strdup($1); }
+  | IDENTIFICADOR {
+        Simbolo *s = buscarSimbolo($1);
+        if (!s) {
+            yyerror("Variavel nao declarada.");
+            $$ = strdup("");
+        } else if (s->tipo == TIPO_STRING) {
+            $$ = strdup(s->valor.strValue);
+        } else {
+            yyerror("Tipo nao string em expressao string.");
+            $$ = strdup("");
         }
         free($1);
     }
