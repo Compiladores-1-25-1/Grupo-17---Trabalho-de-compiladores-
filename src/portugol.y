@@ -9,24 +9,22 @@ int yylex(void);
 void yyerror(const char *s);
 void erro_semantico(const char *s);
 #define MAX_NIVEL 100
-int executando = 1;              /* flag corrente */
-int exec_stack[MAX_NIVEL];       /* armazena flags pai */
-int cond_stack[MAX_NIVEL];       /* armazena condição de cada if */
-int exec_sp = 0;                 /* topo da pilha */
+int executando = 1;
+int exec_stack[MAX_NIVEL];
+int cond_stack[MAX_NIVEL];
+int exec_sp = 0;
 %}
 
 %code requires {
 #include "ast.h"
 }
 
-/* Declaração de precedência */
-%right NOT_LOGICO NOT_BIT '~'     /* unários */
+%right NOT_LOGICO NOT_BIT '~'
 %left OR_LOGICO
 %left AND_LOGICO
-
 %nonassoc IGUAL DIFERENTE
 %nonassoc MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
-%nonassoc SENAO                   /* resolve dangling-else */
+%nonassoc SENAO
 %left '|'
 %left '^'
 %left '&'
@@ -34,7 +32,6 @@ int exec_sp = 0;                 /* topo da pilha */
 %left '*' '/' MOD
 %right UMINUS
 
-/* Tokens e tipos associados */
 %token SE ENTAO SENAO FIM_SE
 %token ENQUANTO FACA IMPRIMA LEIA
 %token OR_LOGICO AND_LOGICO NOT_LOGICO
@@ -50,13 +47,11 @@ int exec_sp = 0;                 /* topo da pilha */
     Tipo   tipo;
 }
 
-/* Tokens com valores associados */
 %token <intValue>    INTEIRO
 %token <floatValue>  REAL
 %token <strValue>    IDENTIFICADOR STRING CARACTERE
 
-/* Tipos de regras */
-%type <intValue>     expressao
+%type <no>           expressao
 %type <strValue>     expressao_string
 %type <tipo>         tipo_var
 
@@ -89,8 +84,8 @@ comando:
         if (!s) {
             yyerror("ID nao declarado");
         } else {
-            if (s->tipo == TIPO_INT) s->valor.intValue = $3;
-            else if (s->tipo == TIPO_REAL) s->valor.floatValue = $3;
+            if (s->tipo == TIPO_INT) s->valor.intValue = $3->valor;
+            else if (s->tipo == TIPO_REAL) s->valor.floatValue = $3->valor;
             else yyerror("Atribuicao invalida a tipo nao suportado.");
         }
         free($1);
@@ -109,7 +104,7 @@ comando:
         free($3);
     }
   | IMPRIMA expressao ';' {
-        if (executando) printf("%d\n", $2);
+        if (executando) imprimirAST($2);
     }
   | IMPRIMA expressao_string ';' {
         if (executando) printf("%s\n", $2);
@@ -146,19 +141,19 @@ comando:
             scanf("%f", &s->valor.floatValue);
         } else if (s->tipo == TIPO_STRING) {
           printf("Digite um valor string para %s: ", s->nome);
-          s->valor.strValue = malloc(256);  // aloca memória
+          s->valor.strValue = malloc(256);
           if (!s->valor.strValue) {
-              yyerror("Erro ao alocar memória para string.");
+              yyerror("Erro ao alocar memoria para string.");
           } else {
-              scanf("%255s", s->valor.strValue);  // limita a entrada
+              scanf("%255s", s->valor.strValue);
           }
         }
         free($2);
     }
   | SE expressao ENTAO {
         exec_stack[exec_sp] = executando;
-        cond_stack[exec_sp] = $2;
-        executando = executando && $2;
+        cond_stack[exec_sp] = $2->valor;
+        executando = executando && $2->valor;
         exec_sp++;
     }
     lista_comandos comando_fim
@@ -166,7 +161,6 @@ comando:
 ;
 
 comando_fim:
-    /* ELSE */
     SENAO {
         exec_sp--;
         executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
@@ -177,7 +171,6 @@ comando_fim:
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
-
   | FIM_SE {
         exec_sp--;
         executando = exec_stack[exec_sp];
@@ -185,48 +178,18 @@ comando_fim:
 ;
 
 expressao:
-    expressao '+' expressao         { $$ = $1 + $3; }
-  | expressao '-' expressao         { $$ = $1 - $3; }
-  | expressao '*' expressao         { $$ = $1 * $3; }
-  | expressao '/' expressao {
-        if ($3 == 0) {
-            erro_semantico("Divisao por zero!");
-            $$ = -1;
-        } else {
-            $$ = $1 / $3;
-        }
-    }
-  | expressao MOD expressao         { $$ = $1 % $3; }
-  | expressao IGUAL expressao       { $$ = $1 == $3; }
-  | expressao DIFERENTE expressao   { $$ = $1 != $3; }
-  | expressao MAIOR expressao       { $$ = $1 > $3; }
-  | expressao MENOR expressao       { $$ = $1 < $3; }
-  | expressao MAIOR_IGUAL expressao { $$ = $1 >= $3; }
-  | expressao MENOR_IGUAL expressao { $$ = $1 <= $3; }
-  | expressao OR_LOGICO expressao   { $$ = $1 || $3; }
-  | expressao AND_LOGICO expressao  { $$ = $1 && $3; }
-  | NOT_LOGICO expressao            { $$ = !$2; }
-  | expressao '|' expressao         { $$ = $1 | $3; }
-  | expressao '&' expressao         { $$ = $1 & $3; }
-  | expressao '^' expressao         { $$ = $1 ^ $3; }
-  | NOT_BIT expressao               { $$ = ~$2; }
-  | '+' expressao                   { $$ = $2; }
-  | '-' expressao %prec UMINUS      { $$ = -$2; }
-  | INTEIRO                         { $$ = $1; }
-  | REAL                            { $$ = $1; }
-  | '(' expressao ')'               { $$ = $2; }
+    expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); }
+  | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
+  | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
+  | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
+  | INTEIRO                         { $$ = criarNoNum($1); }
   | IDENTIFICADOR {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("Variavel nao declarada.");
-            $$ = 0;
-        } else if (s->tipo == TIPO_INT) {
-            $$ = s->valor.intValue;
-        } else if (s->tipo == TIPO_REAL) {
-            $$ = s->valor.floatValue;
+            $$ = criarNoNum(0);
         } else {
-            yyerror("Tipo nao suportado em expressao.");
-            $$ = 0;
+            $$ = criarNoId($1, s->tipo);
         }
         free($1);
     }
@@ -253,10 +216,6 @@ expressao_string:
 
 extern int yylineno;
 extern char *yytext;
-
-int valor_logico(Expressao e) {
-    return (e.tipo == TIPO_REAL) ? e.floatValue != 0.0 : e.intValue != 0;
-}
 
 void yyerror(const char *s) {
     fprintf(stderr, "\033[31mErro sintatico\033[0m na linha %d, proximo de '%s': %s\n", yylineno, yytext, s);
