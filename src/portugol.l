@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
     #include "portugol.tab.h"
     #include <string.h>
@@ -8,6 +10,7 @@
 
     // Para evitar warnings do yyin
     extern FILE *yyin;
+    extern int yylineno;
 %}
 
 %%
@@ -24,15 +27,19 @@
     return INTEIRO; }
 "real"          {  yylval.strValue = strdup(yytext); 
     return REAL; }
+"string"          {  yylval.strValue = strdup(yytext); 
+    return STRING; }
+"caractere"          {  yylval.strValue = strdup(yytext); 
+    return CARACTERE; }
 
-[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return NUM_REAL; }
-[0-9]+              { yylval.intValue = atoi(yytext); return NUM_INT; }
+[0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
+[0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
 \"([^\\\"]|\\.)*\"  {
-                      yytext[yyleng - 1] = '\0';                // Remove aspa final
-                      yylval.strValue = strdup(yytext + 1);     // Remove aspa inicial
-                      return STRING;
-                  }
+    yytext[yyleng - 1] = '\0';                // Remove aspa final
+    yylval.strValue = strdup(yytext + 1);     // Remove aspa inicial
+    return STRING;  // Alterado de CARACTERE para STRING
+}
 
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.strValue = strdup(yytext);  // Armazena o nome do identificador em yylval
@@ -63,7 +70,7 @@
 
 [ \t\r\n]+      { /* Ignorar espaços e quebras de linha */ }
 
-. { fprintf(stderr, "\033[31mErro léxico\033[0m na linha %d: Caractere inválido '%s'\n", yylineno, yytext); return 0; }
+. { fprintf(stderr, "\033[31mErro lexico\033[0m na linha %d: Caractere invalido '%s'\n", yylineno, yytext); return 0; }
 
 
 %%

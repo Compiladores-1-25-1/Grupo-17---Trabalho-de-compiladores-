@@ -1,4 +1,5 @@
 # Grupo 17 - Trabalho de compiladores
+
 ## 📜 Sobre o projeto
    Este repositório é dedicado à disciplina de Compiladores 1 ministrada pelo professor Dr. Sérgio Freitas. <br>
    A equipe optou por desenvolver um interpretador de portugol.
@@ -63,3 +64,10 @@
 - Apresentação 2
 - Entrega final
 - Entrevista Final
+
+## Como rodar os testes
+
+* Entre na pasta src/tests: `cd src/tests`
+* Execute o comando: `sh tests.sh`  
+
+**OBS: Para rodar o scrip você deve ter um terminal bash**
