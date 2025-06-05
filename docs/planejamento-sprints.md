@@ -19,7 +19,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
   - Ambiente configurado e testado (cada membro deve conseguir compilar e rodar um “hello world” com Flex/Bison).  
 
 ### **Tarefas e Atividades**  
- - [x]  **Definir o escopo do interpretador**: quais construções essenciais da linguagem serão suportadas (tipos de dados, operadores, estruturas de controle etc.).  
+ - [x] **Definir o escopo do interpretador**: quais construções essenciais da linguagem serão suportadas (tipos de dados, operadores, estruturas de controle etc.).  
  - [x] **Configurar repositório** (GitHub ou similar) e adicionar todos os membros (incluindo o professor: “sergioaafreitas” ou “sergiofreitas@unb.br”).  
  - [x] **Configurar ferramentas**: Flex, Bison, compilador C/C++ (ou outra linguagem) no ambiente local.  
  - [x] **Criar gramática inicial** no Bison (arquivo `.y`) e o arquivo de regras léxicas no Flex (arquivo `.l`), ainda que incompletos.  
@@ -38,7 +38,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
  - [x] **Testar** tokens e parser em pequenos exemplos, validando o fluxo léxico-sintático.
  - [x] **Preencher** Formulário P1
  - [x] **Preparar** material de apresentação (P1) sobre o progresso (mostrar tokens reconhecidos e regras sintáticas iniciais).  
- - [x]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [x] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
 
@@ -50,10 +50,10 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
    - [ ] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
-   - [ ] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
-   - [ ] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
-   - [ ] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
-   - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues. 
+   - [x] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
+   - [x] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
+   - [x] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
+   - [x] **Montagem da documentação**: elaborar e validar as documentações que serão entregues. 
 ---
 
 ## Sprint 4 (15/05 a 04/06)  
@@ -64,12 +64,12 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
+ - [ ] **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
  - [ ] **Consolidar** estruturas de controle (if, while, etc.), garantindo que a AST as represente adequadamente.  
  - [ ] **Testar** o interpretador com programas de exemplo que demonstrem a execução de comandos básicos.  
- - [ ] **Preencher** Formulário P2
- - [ ] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
- - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [x] **Preencher** Formulário P2
+ - [x] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
+ - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
  
 ---
 
@@ -81,11 +81,11 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
- - [ ]  **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
+ - [ ] **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
+ - [ ] **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
  - [ ] **Testar** intensivamente (abordando construções avançadas e casos-limite).  
- - [ ]  **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
- - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [ ] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
+ - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
 
@@ -97,7 +97,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
+ - [ ] **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
  - [ ] **Corrigir** eventuais falhas apontadas pelo professor durante as entrevistas ou testes.
  - [ ] **Finalizar** documentação e organizar exemplos de uso.  
 
