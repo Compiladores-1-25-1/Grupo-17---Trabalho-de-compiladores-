@@ -73,33 +73,33 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
  
 ---
 
-## Sprint 5 (05/06 a 25/06)  
+## Sprint 5 (05/06 a 12/06)  
 ### **Principais Entregas**  
   - Interpretador ampliado, com eventuais otimizações e funcionalidades extras.  
-  - Testes de integração em diversos programas de exemplo.  
-  - Versão final pronta para entrega até 27/06 (23h59) via Teams.  
+  - Testes de integração em diversos programas de exemplo.   
 
 ### **Tarefas e Atividades**  
 
  - [ ] **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
  - [ ] **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
  - [ ] **Testar** intensivamente (abordando construções avançadas e casos-limite).  
- - [ ] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
  - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
 
-## Sprint 6 (26/06 a 09/07)  
+## Sprint 6 (12/06 a 19/07)  
 ### **Principais Entregas**  
   - **Entrevistas** de entrega do projeto final (toda a equipe deve estar presente).  
   - **Documentação** completa (README, manual de uso, explicações sobre a AST e a execução).  
-  - Ajustes finais (caso o professor detecte problemas).  
+  - Ajustes finais (caso o professor detecte problemas).
+  - Versão final pronta para entrega até 27/06 (23h59) via Teams.   
 
 ### **Tarefas e Atividades**  
 
  - [ ] **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
  - [ ] **Corrigir** eventuais falhas apontadas pelo professor durante as entrevistas ou testes.
- - [ ] **Finalizar** documentação e organizar exemplos de uso.  
+ - [ ] **Finalizar** documentação e organizar exemplos de uso.
+ - [ ] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
 
 ---
 
@@ -128,3 +128,4 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 | 1.0 | 03/04/2025 | Criação do documento de Planejamento das Sprints |
 | 1.1 | 19/04/2025 | Inclusão do link para o Notion |
 | 1.2 | 24/04/2025 | Atualização das tarefas da Sprint 2 |
+| 1.3 | 05/06/2025 | Mudanças nas tarefas e atividades das Sprints 5 e 6 |
