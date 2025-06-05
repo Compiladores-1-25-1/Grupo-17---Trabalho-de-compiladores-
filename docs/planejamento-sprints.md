@@ -49,7 +49,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
   - Parser que já constrói a AST durante a análise sintática, facilitando a etapa de interpretação futura.  
 
 ### **Tarefas e Atividades**  
-   - [ ] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
+   - [x] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
    - [x] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
    - [x] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
    - [x] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
