@@ -197,6 +197,7 @@ expressao:
   | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
   | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
   | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
+  | '(' expressao ')'               { $$ = $2; }
   | INTEIRO                         { $$ = criarNoNum($1); }
   | IDENTIFICADOR {
         Simbolo *s = buscarSimbolo($1);
