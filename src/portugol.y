@@ -145,13 +145,13 @@ comando:
             printf("Digite um valor real para %s: ", s->nome);
             scanf("%f", &s->valor.floatValue);
         } else if (s->tipo == TIPO_STRING) {
-          printf("Digite um valor string para %s: ", s->nome);
-          s->valor.strValue = malloc(256);
-          if (!s->valor.strValue) {
-              yyerror("Erro ao alocar memoria para string.");
-          } else {
-              scanf("%255s", s->valor.strValue);
-          }
+            printf("Digite um valor string para %s: ", s->nome);
+            s->valor.strValue = malloc(256);
+            if (!s->valor.strValue) {
+                yyerror("Erro ao alocar memoria para string.");
+            } else {
+                scanf("%255s", s->valor.strValue);
+            }
         }
         free($2);
     }
@@ -197,6 +197,12 @@ expressao:
   | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
   | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
   | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
+  | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); }
+  | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); }
+  | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); }
+  | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
+  | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); }
+  | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); }
   | '(' expressao ')'               { $$ = $2; }
   | INTEIRO                         { $$ = criarNoNum($1); }
   | IDENTIFICADOR {
