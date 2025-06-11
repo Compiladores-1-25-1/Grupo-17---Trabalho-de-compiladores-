@@ -79,12 +79,12 @@ tipo_var:
 ;
 
 comando:
-    tipo_var IDENTIFICADOR ';' {
+    tipo_var IDENTIFICADOR '\n' {
         if (buscarSimbolo($2)) yyerror("Redeclaracao de variavel");
         else inserirSimbolo($2, $1);
         free($2);
     }
-  | IDENTIFICADOR '=' expressao ';' {
+  | IDENTIFICADOR '=' expressao '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("ID nao declarado");
@@ -95,7 +95,7 @@ comando:
         }
         free($1);
     }
-  | IDENTIFICADOR '=' expressao_string ';' {
+  | IDENTIFICADOR '=' expressao_string '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("ID nao declarado");
@@ -108,14 +108,14 @@ comando:
         free($1);
         free($3);
     }
-  | IMPRIMA expressao ';' {
+  | IMPRIMA expressao '\n' {
         if (executando) printf("%d\n", $2);
     }
-  | IMPRIMA expressao_string ';' {
+  | IMPRIMA expressao_string '\n' {
         if (executando) printf("%s\n", $2);
         free($2);
     }
-  | IMPRIMA IDENTIFICADOR ';' {
+  | IMPRIMA IDENTIFICADOR '\n' {
         if (executando) {
             Simbolo *s = buscarSimbolo($2);
             if (!s) {
@@ -130,11 +130,11 @@ comando:
         }
         free($2);
     }
-  | IMPRIMA '(' STRING ')' ';' {
+  | IMPRIMA '(' STRING ')' '\n' {
         if (executando) printf("%s\n", $3);
         free($3);
     }
-  | LEIA IDENTIFICADOR ';' {
+  | LEIA IDENTIFICADOR '\n' {
         Simbolo *s = buscarSimbolo($2);
         if (!s) {
             yyerror("Erro: Variavel nao declarada.");
@@ -155,30 +155,30 @@ comando:
         }
         free($2);
     }
-  | SE expressao ENTAO {
+  | SE expressao ENTAO '\n'{
         exec_stack[exec_sp] = executando;
         cond_stack[exec_sp] = $2;
         executando = executando && $2;
         exec_sp++;
     }
     lista_comandos comando_fim
-  | ENQUANTO expressao FACA lista_comandos FIM_SE
+  | ENQUANTO expressao FACA lista_comandos FIM_SE 
 ;
 
 comando_fim:
     /* ELSE */
-    SENAO {
+    SENAO '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
         exec_stack[exec_sp] = exec_stack[exec_sp];
         exec_sp++;
     }
-    lista_comandos FIM_SE {
+    lista_comandos FIM_SE '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
 
-  | FIM_SE {
+  | FIM_SE '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp];
     }

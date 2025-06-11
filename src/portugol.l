@@ -49,7 +49,6 @@
 "("         { return '('; }
 ")"         { return ')'; }
 "="         { return '='; }
-";"         { return ';'; }
 "+"         { return '+'; }
 "-"         { return '-'; }
 "*"         { return '*'; }
@@ -67,8 +66,10 @@
 "<"         { return MENOR; }
 "%"         { return MOD; }
 "˜"         { return NOT_BIT; }
+(\r?\n)+     { return '\n'; }
 
-[ \t\r\n]+      { /* Ignorar espaços e quebras de linha */ }
+
+[ \t\r]+      { /* Ignorar espaços e quebras de linha */ }
 
 . { fprintf(stderr, "\033[31mErro lexico\033[0m na linha %d: Caractere invalido '%s'\n", yylineno, yytext); return 0; }
 

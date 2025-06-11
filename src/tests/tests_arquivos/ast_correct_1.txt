@@ -1,10 +1,16 @@
-inteiro x;
-x = 0;
+inteiro x
 
-inteiro y;
-y = 10;
+x = 0
 
-real media;
-media = (x + y)/2;
 
-imprima media;
+inteiro y
+
+y = 10
+
+
+real media
+
+media = (x + y)/2
+
+
+imprima media
