@@ -155,30 +155,30 @@ comando:
         }
         free($2);
     }
-  | SE expressao ENTAO {
+  | SE expressao ENTAO '\n'{
         exec_stack[exec_sp] = executando;
         cond_stack[exec_sp] = $2;
         executando = executando && $2;
         exec_sp++;
     }
     lista_comandos comando_fim
-  | ENQUANTO expressao FACA lista_comandos FIM_SE
+  | ENQUANTO expressao FACA lista_comandos FIM_SE 
 ;
 
 comando_fim:
     /* ELSE */
-    SENAO {
+    SENAO '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
         exec_stack[exec_sp] = exec_stack[exec_sp];
         exec_sp++;
     }
-    lista_comandos FIM_SE {
+    lista_comandos FIM_SE '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
 
-  | FIM_SE {
+  | FIM_SE '\n'{
         exec_sp--;
         executando = exec_stack[exec_sp];
     }

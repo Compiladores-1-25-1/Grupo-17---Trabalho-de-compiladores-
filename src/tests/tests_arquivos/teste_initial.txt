@@ -1,51 +1,80 @@
+imprima 10
 
-imprima 10;
 
 se 5 + 3 então
-    imprima ("resultado:");
-    imprima 8;
+
+    imprima ("resultado:")
+
+    imprima 8
+
 fim-se
 
-imprima 10 - 2 * 3;
+imprima 10 - 2 * 3
 
-imprima (10 - 2) * 3;
+imprima (10 - 2) * 3
 
-
-
-imprima ("Suite de testes");
+imprima ("Suite de testes")
 
 se 5 > 3 então
-    imprima ("5 é maior que 3");
+
+    imprima ("5 é maior que 3")
+
 fim-se
+
 
 se 5 < 3 então
-    imprima ("5 é menor que 3 (ERRO)");
+
+    imprima ("5 é menor que 3 (ERRO)")
+
 senão
-    imprima ("5 não é menor que 3 (OK)");
+
+    imprima ("5 não é menor que 3 (OK)")
+
 fim-se
+
 
 se 5 > 13 então
-    imprima ("5 é maior que 13 (ERRO)");
+
+    imprima ("5 é maior que 13 (ERRO)")
+
 senão
-    imprima ("5 não é maior que 13 (OK)");
+
+    imprima ("5 não é maior que 13 (OK)")
+
 fim-se
+
 
 se 5 < 13 então
-    imprima ("5 é menor que 13 (OK)");
+
+    imprima ("5 é menor que 13 (OK)")
+
 senão
-    imprima ("5 não é menor que 13 (ERRO)");
+
+    imprima ("5 não é menor que 13 (ERRO)")
+
 fim-se
+
 
 se 19 > 1 então
-    imprima ("19 é maior que 1 (OK)");
+
+    imprima ("19 é maior que 1 (OK)")
+
 senão
-    imprima ("19 não é maior que 1 (ERRO)");
+
+    imprima ("19 não é maior que 1 (ERRO)")
+
 fim-se
+
 
 se 19 < 1 então
-    imprima ("19 é menor que 1 (ERRO)");
+
+    imprima ("19 é menor que 1 (ERRO)")
+
 senão
-    imprima ("19 não é menor que 1 (OK)");
+
+    imprima ("19 não é menor que 1 (OK)")
+
 fim-se
 
-imprima (5 / 0);
+
+imprima (5 / 0)
