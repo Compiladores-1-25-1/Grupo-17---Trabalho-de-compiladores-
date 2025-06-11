@@ -11,7 +11,7 @@ imprima 10 < 5;
 
 imprima (10 + 2);
 
-imprima 10 ^^ 2;
+imprima 10 * 2;
 
 real x;
 x = "0.0";
