@@ -83,10 +83,31 @@ comando:
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("ID nao declarado");
+            liberarAST($3);
         } else {
-            if (s->tipo == TIPO_INT) s->valor.intValue = $3->valor;
-            else if (s->tipo == TIPO_REAL) s->valor.floatValue = $3->valor;
-            else yyerror("Atribuicao invalida a tipo nao suportado.");
+             NoAST* resultado = interpretar($3);
+             if(!resultado) {
+                yyerror("Erro na interpretação");
+                liberarAST($3);
+                break;
+             }
+            if (s->tipo == resultado->tipo) { //Verificação de tipos na atribuição
+                switch (s->tipo) {
+                    case TIPO_INT:
+                        s->valor.intValue = resultado->valor.intValue;
+                        break;
+                    case TIPO_REAL:
+                        s->valor.floatValue = resultado->valor.floatValue;
+                        break;
+                    default:
+                        yyerror("Atribuicao invalida a tipo nao suportado.");
+                        break;
+                }
+                liberarAST(resultado);
+            } else {
+                yyerror("Tipos incompativeis na atribuicao.");
+                 liberarAST(resultado);
+            }
         }
         free($1);
     }
@@ -94,38 +115,46 @@ comando:
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("ID nao declarado");
+            free($3);
         } else if (s->tipo == TIPO_STRING) {
             if (s->valor.strValue) free(s->valor.strValue);
             s->valor.strValue = strdup($3);
+            free($3);
         } else {
             yyerror("Atribuicao de string a tipo nao string");
+            free($3);
         }
         free($1);
-        free($3);
     }
-<<<<<<< HEAD
   | IMPRIMA expressao '\n' {
-        if (executando) printf("%d\n", $2);
-=======
-  | IMPRIMA expressao ';' {
-        if (executando) imprimirAST($2);
->>>>>>> a8d67ae (implementação inicial da AST no arquivo do FLEX)
+        if (executando) {
+            NoAST* resultado = interpretar($2);
+            if (resultado) {
+                imprimirValor(resultado); // Imprime o valor usando a função auxiliar
+                printf("\n");
+                liberarAST(resultado);
+            }
+        }
+        liberarAST($2);
     }
   | IMPRIMA expressao_string '\n' {
         if (executando) printf("%s\n", $2);
         free($2);
     }
   | IMPRIMA IDENTIFICADOR '\n' {
-        if (executando) {
-            Simbolo *s = buscarSimbolo($2);
-            if (!s) {
-                yyerror("Erro: Variavel nao declarada.");
-            } else if (s->tipo == TIPO_INT) {
-                printf("%d\n", s->valor.intValue);
-            } else if (s->tipo == TIPO_REAL) {
-                printf("%f\n", s->valor.floatValue);
-            } else if (s->tipo == TIPO_STRING) {
-                printf("%s\n", s->valor.strValue);
+        Simbolo *s = buscarSimbolo($2);
+        if (!s) {
+            yyerror("ID nao declarado");
+        } else {
+            if (executando) {
+                NoAST *no_id = criarNoId($2, s->tipo);
+                NoAST* resultado = interpretar(no_id);
+                if (resultado) {
+                    imprimirValor(resultado);
+                    printf("\n");
+                    liberarAST(resultado);
+                }
+                liberarAST(no_id);
             }
         }
         free($2);
@@ -156,22 +185,26 @@ comando:
         free($2);
     }
   | SE expressao ENTAO '\n'{
+        NoAST* resultado = interpretar($2);
+        if (!resultado) {
+            executando = 0; // Impede a execução se a expressão for inválida
+            liberarAST($2);
+            break;
+        }
         exec_stack[exec_sp] = executando;
-        cond_stack[exec_sp] = $2->valor;
-        executando = executando && $2->valor;
+        cond_stack[exec_sp] = resultado->valor.intValue; // Supondo que a expressão booleana retorna um inteiro
+        executando = executando && resultado->valor.intValue;
         exec_sp++;
+        liberarAST(resultado);
+        liberarAST($2);
     }
     lista_comandos comando_fim
   | ENQUANTO expressao FACA lista_comandos FIM_SE 
 ;
 
 comando_fim:
-<<<<<<< HEAD
     /* ELSE */
     SENAO '\n'{
-=======
-    SENAO {
->>>>>>> a8d67ae (implementação inicial da AST no arquivo do FLEX)
         exec_sp--;
         executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
         exec_stack[exec_sp] = exec_stack[exec_sp];
@@ -181,35 +214,30 @@ comando_fim:
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
-<<<<<<< HEAD
-
   | FIM_SE '\n'{
-=======
-  | FIM_SE {
->>>>>>> a8d67ae (implementação inicial da AST no arquivo do FLEX)
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
 ;
 
 expressao:
-    expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); }
-  | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
-  | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
-  | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
-  | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); }
-  | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); }
-  | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); }
-  | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
-  | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); }
-  | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); }
-  | '(' expressao ')'               { $$ = $2; }
-  | INTEIRO                         { $$ = criarNoNum($1); }
+    expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); $$->tipo = $1->tipo;}
+  | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); $$->tipo = $1->tipo;}
+  | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); $$->tipo = $1->tipo;}
+  | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); $$->tipo = $1->tipo;}
+  | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); $$->tipo = TIPO_INT;}
+  | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); $$->tipo = TIPO_INT;}
+  | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); $$->tipo = TIPO_INT;}
+  | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); $$->tipo = TIPO_INT;}
+  | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); $$->tipo = TIPO_INT;}
+  | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); $$->tipo = TIPO_INT;}
+  | '(' expressao ')'               { $$ = $2; $$->tipo = $2->tipo;}
+  | INTEIRO                         { $$ = criarNoNum($1); $$->tipo = TIPO_INT;}
   | IDENTIFICADOR {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             yyerror("Variavel nao declarada.");
-            $$ = criarNoNum(0);
+            $$ = criarNoNum(0); // Retorna um nó numérico para evitar erros em cascata
         } else {
             $$ = criarNoId($1, s->tipo);
         }
