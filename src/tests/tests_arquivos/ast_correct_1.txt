@@ -2,11 +2,9 @@ inteiro x
 
 x = 0
 
-
 inteiro y
 
 y = 10
-
 
 inteiro media
 

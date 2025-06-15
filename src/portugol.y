@@ -75,38 +75,41 @@ tipo_var:
 
 comando:
     tipo_var IDENTIFICADOR '\n' {
-        if (buscarSimbolo($2)) yyerror("Redeclaracao de variavel");
-        else inserirSimbolo($2, $1);
+        if (buscarSimbolo($2)) {
+            erro_semantico("Redeclaracao de variavel");
+        } else {
+            inserirSimbolo($2, $1);
+        }
         free($2);
     }
   | IDENTIFICADOR '=' expressao '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
-            yyerror("ID nao declarado");
+            erro_semantico("ID nao declarado");
             liberarAST($3);
         } else {
-             NoAST* resultado = interpretar($3);
-             if(!resultado) {
-                yyerror("Erro na interpretação");
+            NoAST* resultado = interpretar($3);
+            if(!resultado) {
+                erro_semantico("Erro na interpretação");
                 liberarAST($3);
-                break;
-             }
-            if (s->tipo == resultado->tipo) { //Verificação de tipos na atribuição
-                switch (s->tipo) {
-                    case TIPO_INT:
-                        s->valor.intValue = resultado->valor.intValue;
-                        break;
-                    case TIPO_REAL:
-                        s->valor.floatValue = resultado->valor.floatValue;
-                        break;
-                    default:
-                        yyerror("Atribuicao invalida a tipo nao suportado.");
-                        break;
-                }
-                liberarAST(resultado);
             } else {
-                yyerror("Tipos incompativeis na atribuicao.");
-                 liberarAST(resultado);
+                if (s->tipo == resultado->tipo) {
+                    switch (s->tipo) {
+                        case TIPO_INT:
+                            s->valor.intValue = resultado->valor.intValue;
+                            break;
+                        case TIPO_REAL:
+                            s->valor.floatValue = resultado->valor.floatValue;
+                            break;
+                        default:
+                            erro_semantico("Atribuicao invalida a tipo nao suportado.");
+                            break;
+                    }
+                    liberarAST(resultado);
+                } else {
+                    erro_semantico("Tipos incompativeis na atribuicao.");
+                    liberarAST(resultado);
+                }
             }
         }
         free($1);
@@ -114,14 +117,14 @@ comando:
   | IDENTIFICADOR '=' expressao_string '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
-            yyerror("ID nao declarado");
+            erro_semantico("ID nao declarado");
             free($3);
         } else if (s->tipo == TIPO_STRING) {
             if (s->valor.strValue) free(s->valor.strValue);
             s->valor.strValue = strdup($3);
             free($3);
         } else {
-            yyerror("Atribuicao de string a tipo nao string");
+            erro_semantico("Atribuicao de string a tipo nao string");
             free($3);
         }
         free($1);
@@ -134,7 +137,7 @@ comando:
                 printf("\n");
                 liberarAST(resultado);
             } else {
-                yyerror("Erro ao interpretar expressão.");
+                erro_semantico("Erro ao interpretar expressão");
             }
         }
         liberarAST($2);
@@ -146,7 +149,7 @@ comando:
   | IMPRIMA IDENTIFICADOR '\n' {
         Simbolo *s = buscarSimbolo($2);
         if (!s) {
-            yyerror("ID nao declarado");
+            erro_semantico("ID nao declarado");
         } else {
             if (executando) {
                 NoAST *no_id = criarNoId($2, s->tipo);
@@ -168,7 +171,7 @@ comando:
   | LEIA IDENTIFICADOR '\n' {
         Simbolo *s = buscarSimbolo($2);
         if (!s) {
-            yyerror("Erro: Variavel nao declarada.");
+            erro_semantico("Erro: Variavel nao declarada.");
         } else if (s->tipo == TIPO_INT) {
             printf("Digite um valor inteiro para %s: ", s->nome);
             scanf("%d", &s->valor.intValue);
@@ -179,37 +182,36 @@ comando:
             printf("Digite um valor string para %s: ", s->nome);
             s->valor.strValue = malloc(256);
             if (!s->valor.strValue) {
-                yyerror("Erro ao alocar memoria para string.");
+                erro_semantico("Erro ao alocar memoria para string.");
             } else {
                 scanf("%255s", s->valor.strValue);
             }
         }
         free($2);
     }
-// Regra para SE com ou sem SENAO
     | SE expressao ENTAO '\n' {
+        
         NoAST* resultado = interpretar($2);
         if (!resultado || resultado->tipo != TIPO_INT) {
-            fprintf(stderr, "Erro: expressão inválida no SE.\n");
             executando = 0;
+            if (resultado) liberarAST(resultado);
             liberarAST($2);
-            liberarAST(resultado);
             YYABORT;
         }
 
         if (exec_sp >= MAX_NIVEL) {
-            fprintf(stderr, "Erro: pilha de execução excedeu o limite no SE.\n");
-            liberarAST($2);
             liberarAST(resultado);
+            liberarAST($2);
             exit(EXIT_FAILURE);
         }
 
+       
         exec_stack[exec_sp] = executando;
         cond_stack[exec_sp] = resultado->valor.intValue;
         executando = executando && resultado->valor.intValue;
+        
         exec_sp++;
 
-        liberarAST(resultado);
         liberarAST($2);
     }
     lista_comandos comando_fim
@@ -219,24 +221,24 @@ comando:
 comando_fim:
     FIM_SE '\n' {
         if (exec_sp <= 0) {
-            fprintf(stderr, "Erro: FIM_SE sem SE correspondente (exec_sp = 0).\n");
+            fprintf(stderr, "[DEBUG] Erro: FIM_SE sem SE correspondente (exec_sp: %d)\n", exec_sp);
             exit(EXIT_FAILURE);
         }
         exec_sp--;
+       
         executando = exec_stack[exec_sp];
     }
   | SENAO '\n' {
         if (exec_sp <= 0) {
-            fprintf(stderr, "Erro: SENAO sem SE correspondente (exec_sp = %d).\n", exec_sp);
+            fprintf(stderr, "[DEBUG] Erro: SENAO sem SE correspondente (exec_sp: %d)\n", exec_sp);
             exit(EXIT_FAILURE);
         }
+        
         executando = exec_stack[exec_sp - 1] && !cond_stack[exec_sp - 1];
     }
     lista_comandos
     comando_fim
 ;
-
-
 
 expressao:
     expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); $$->tipo = $1->tipo;}
@@ -245,8 +247,6 @@ expressao:
   | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); $$->tipo = $1->tipo;}
   | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); $$->tipo = TIPO_INT;}
   | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); $$->tipo = TIPO_INT;}
-  | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); $$->tipo = TIPO_INT;}
-  | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); $$->tipo = TIPO_INT;}
   | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); $$->tipo = TIPO_INT;}
   | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); $$->tipo = TIPO_INT;}
   | '(' expressao ')'               { $$ = $2; $$->tipo = $2->tipo;}
@@ -278,5 +278,4 @@ void yyerror(const char *s) {
 
 void erro_semantico(const char *s) {
     fprintf(stderr, "\033[33m[Erro semantico]\033[0m na linha %d: %s\n", yylineno, s);
-    exit(1);
 }

@@ -46,7 +46,9 @@ senão
 
 fim-se
 
+
 imprima ("teste 2")
+
 
 se 5 < 13 então
 
@@ -80,4 +82,4 @@ senão
 
 fim-se
 
-imprima (5 / 0)
+imprima 5 / 0
