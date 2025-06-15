@@ -1,7 +1,10 @@
 #!/bin/bash
 
+rm -r portugol portugol.tab.c lex.yy.c portugol.tab.h
+
 bison -d ../portugol.y
 flex ../portugol.l
+
 
 gcc -I.. -o portugol portugol.tab.c ../tabela.c ../ast.c lex.yy.c -lfl
 

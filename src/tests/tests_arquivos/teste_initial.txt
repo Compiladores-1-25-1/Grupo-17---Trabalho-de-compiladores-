@@ -33,6 +33,9 @@ senão
 fim-se
 
 
+imprima ("teste 1")
+
+
 se 5 > 13 então
 
     imprima ("5 é maior que 13 (ERRO)")
@@ -42,6 +45,9 @@ senão
     imprima ("5 não é maior que 13 (OK)")
 
 fim-se
+
+
+imprima ("teste 2")
 
 
 se 5 < 13 então
@@ -76,5 +82,4 @@ senão
 
 fim-se
 
-
-imprima (5 / 0)
+imprima 5 / 0
