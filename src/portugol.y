@@ -247,19 +247,6 @@ expressao:
 
 expressao_string:
     STRING { $$ = strdup($1); }
-  | IDENTIFICADOR {
-        Simbolo *s = buscarSimbolo($1);
-        if (!s) {
-            yyerror("Variavel nao declarada.");
-            $$ = strdup("");
-        } else if (s->tipo == TIPO_STRING) {
-            $$ = strdup(s->valor.strValue);
-        } else {
-            yyerror("Tipo nao string em expressao string.");
-            $$ = strdup("");
-        }
-        free($1);
-    }
 ;
 
 %%
