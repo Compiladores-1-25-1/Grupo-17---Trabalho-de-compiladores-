@@ -49,7 +49,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
   - Parser que já constrói a AST durante a análise sintática, facilitando a etapa de interpretação futura.  
 
 ### **Tarefas e Atividades**  
-   - [ ] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
+   - [x] **Implementar** as ações semânticas no arquivo `.y` de modo a criar nós da AST para cada construção reconhecida.  
    - [x] **Criar tabela de símbolos** (se for necessária) para verificar declarações de variáveis, escopos, etc.  
    - [x] **Tratar** erros sintáticos e semânticos básicos, exibindo mensagens significativas ao usuário.  
    - [x] **Testar** a AST em pequenos programas (tanto corretos quanto com falhas de sintaxe/semântica). 
@@ -64,12 +64,12 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
+ - [x] **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
  - [ ] **Consolidar** estruturas de controle (if, while, etc.), garantindo que a AST as represente adequadamente.  
- - [ ] **Testar** o interpretador com programas de exemplo que demonstrem a execução de comandos básicos.  
+ - [x] **Testar** o interpretador com programas de exemplo que demonstrem a execução de comandos básicos.  
  - [x] **Preencher** Formulário P2
  - [x] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
- - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
  
 ---
 
@@ -81,11 +81,11 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
- - [ ]  **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
+ - [ ] **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
+ - [ ] **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
  - [ ] **Testar** intensivamente (abordando construções avançadas e casos-limite).  
- - [ ]  **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
- - [ ]  **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [ ] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
+ - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
 
@@ -97,7 +97,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ]  **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
+ - [ ] **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
  - [ ] **Corrigir** eventuais falhas apontadas pelo professor durante as entrevistas ou testes.
  - [ ] **Finalizar** documentação e organizar exemplos de uso.  
 
