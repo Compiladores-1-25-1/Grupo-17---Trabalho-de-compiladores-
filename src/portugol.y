@@ -127,12 +127,14 @@ comando:
         free($1);
     }
   | IMPRIMA expressao '\n' {
-        if (executando) {
+         if (executando) {
             NoAST* resultado = interpretar($2);
             if (resultado) {
-                imprimirValor(resultado); // Imprime o valor usando a função auxiliar
+                imprimirValor(resultado);
                 printf("\n");
                 liberarAST(resultado);
+            } else {
+                yyerror("Erro ao interpretar expressão.");
             }
         }
         liberarAST($2);
@@ -184,41 +186,57 @@ comando:
         }
         free($2);
     }
-  | SE expressao ENTAO '\n'{
+// Regra para SE com ou sem SENAO
+    | SE expressao ENTAO '\n' {
         NoAST* resultado = interpretar($2);
-        if (!resultado) {
-            executando = 0; // Impede a execução se a expressão for inválida
+        if (!resultado || resultado->tipo != TIPO_INT) {
+            fprintf(stderr, "Erro: expressão inválida no SE.\n");
+            executando = 0;
             liberarAST($2);
-            break;
+            liberarAST(resultado);
+            YYABORT;
         }
+
+        if (exec_sp >= MAX_NIVEL) {
+            fprintf(stderr, "Erro: pilha de execução excedeu o limite no SE.\n");
+            liberarAST($2);
+            liberarAST(resultado);
+            exit(EXIT_FAILURE);
+        }
+
         exec_stack[exec_sp] = executando;
-        cond_stack[exec_sp] = resultado->valor.intValue; // Supondo que a expressão booleana retorna um inteiro
+        cond_stack[exec_sp] = resultado->valor.intValue;
         executando = executando && resultado->valor.intValue;
         exec_sp++;
+
         liberarAST(resultado);
         liberarAST($2);
     }
     lista_comandos comando_fim
-  | ENQUANTO expressao FACA lista_comandos FIM_SE 
 ;
 
+// FIM_SE ou SENAO
 comando_fim:
-    /* ELSE */
-    SENAO '\n'{
-        exec_sp--;
-        executando = exec_stack[exec_sp] && !cond_stack[exec_sp];
-        exec_stack[exec_sp] = exec_stack[exec_sp];
-        exec_sp++;
-    }
-    lista_comandos FIM_SE '\n'{
+    FIM_SE '\n' {
+        if (exec_sp <= 0) {
+            fprintf(stderr, "Erro: FIM_SE sem SE correspondente (exec_sp = 0).\n");
+            exit(EXIT_FAILURE);
+        }
         exec_sp--;
         executando = exec_stack[exec_sp];
     }
-  | FIM_SE '\n'{
-        exec_sp--;
-        executando = exec_stack[exec_sp];
+  | SENAO '\n' {
+        if (exec_sp <= 0) {
+            fprintf(stderr, "Erro: SENAO sem SE correspondente (exec_sp = %d).\n", exec_sp);
+            exit(EXIT_FAILURE);
+        }
+        executando = exec_stack[exec_sp - 1] && !cond_stack[exec_sp - 1];
     }
+    lista_comandos
+    comando_fim
 ;
+
+
 
 expressao:
     expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); $$->tipo = $1->tipo;}

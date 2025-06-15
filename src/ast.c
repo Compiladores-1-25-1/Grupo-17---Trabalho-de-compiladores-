@@ -152,27 +152,27 @@ NoAST* interpretar(NoAST *no) {
                 break;
             case '/':
                 if (resultado->tipo == TIPO_INT || resultado->tipo == TIPO_REAL) {
-                    if (valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) {
-                        fprintf(stderr, "Erro: divisão por zero.\n");
-                        free(resultado);
-                        return NULL;
-                    }
-                    if (valDir->tipo == TIPO_REAL && valDir->valor.floatValue == 0.0) {
-                        fprintf(stderr, "Erro: divisão por zero.\n");
-                        free(resultado);
-                        return NULL;
-                    }
-                    if (resultado->tipo == TIPO_INT) {
-                        resultado->valor.intValue = valEsq->valor.intValue / valDir->valor.intValue;
-                    } else {
-                        resultado->valor.floatValue = valEsq->valor.floatValue / valDir->valor.floatValue;
-                    }
-                }else {
-                    fprintf(stderr, "Erro: Operação '/' não suportada para o tipo.\n");
+                if ((valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) ||
+                    (valDir->tipo == TIPO_REAL && valDir->valor.floatValue == 0.0)) {
+                    fprintf(stderr, "Erro: divisão por zero.\n");
+                    liberarAST(valEsq); // Libera a memória alocada para valEsq
+                    liberarAST(valDir); // Libera a memória alocada para valDir
                     free(resultado);
                     return NULL;
                 }
-                break;
+                if (resultado->tipo == TIPO_INT) {
+                    resultado->valor.intValue = valEsq->valor.intValue / valDir->valor.intValue;
+                } else {
+                    resultado->valor.floatValue = valEsq->valor.floatValue / valDir->valor.floatValue;
+                }
+                } else {
+                    fprintf(stderr, "Erro: Operação '/' não suportada para o tipo.\n");
+                    liberarAST(valEsq); // Libera a memória alocada para valEsq
+                    liberarAST(valDir); // Libera a memória alocada para valDir
+                    free(resultado);
+                    return NULL;
+                }
+            break;
             case '>':
             case '<':
             case '=':
