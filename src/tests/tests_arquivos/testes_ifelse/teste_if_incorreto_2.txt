@@ -1,0 +1,7 @@
+inteiro x
+
+x = 10
+
+senão
+    imprima "Sem if"
+fim-se

@@ -1,0 +1,15 @@
+inteiro x
+
+x = 1
+
+se x > 0 então
+    imprima "Positivo1"
+fim-se
+
+se x > 0 então
+    imprima "Positivo2"
+fim-se
+
+se x < 0 então
+    imprima "Negativo"
+fim-se

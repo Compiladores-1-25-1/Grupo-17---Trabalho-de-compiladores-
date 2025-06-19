@@ -1,0 +1,13 @@
+inteiro x
+
+x = 5
+
+se x > 0 então
+    imprima "Positivo"
+    se x > 3 então
+        imprima "Maior que 3"
+        se x == 5 então
+            imprima "Igual a 5"
+        fim-se
+    fim-se
+fim-se

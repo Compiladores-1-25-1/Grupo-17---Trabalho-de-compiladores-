@@ -1,0 +1,9 @@
+inteiro a
+a = 10 ++ 2
+imprima a
+
+a = 5 * / 3
+imprima a
+
+a = 10 %
+imprima a

@@ -1,0 +1,9 @@
+inteiro x
+
+x = 1
+
+se x > 0 então
+    imprima "Positivo"
+senão
+    imprima "Negativo ou zero"
+fim-se
