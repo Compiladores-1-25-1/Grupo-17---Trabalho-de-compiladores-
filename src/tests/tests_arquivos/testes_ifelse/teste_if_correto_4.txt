@@ -1,0 +1,11 @@
+inteiro nota
+
+nota = 8
+
+se nota >= 7 então
+    imprima "Aprovado"
+fim-se
+
+se nota < 7 então
+    imprima "Reprovado"
+fim-se
