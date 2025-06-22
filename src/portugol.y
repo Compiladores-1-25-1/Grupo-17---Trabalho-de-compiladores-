@@ -124,7 +124,7 @@ comando:
             s->valor.strValue = strdup($3);
             free($3);
         } else {
-            erro_semantico("Atribuicao de string a tipo nao string");
+            erro_semantico("Atribuicao de string a variavel do tipo diferente de string");
             free($3);
         }
         free($1);
