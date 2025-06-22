@@ -76,7 +76,7 @@ tipo_var:
 comando:
     tipo_var IDENTIFICADOR '\n' {
         if (buscarSimbolo($2)) {
-            erro_semantico("Redeclaracao de variavel");
+            erro_semantico("A variavel ja foi declarada neste escopo");
         } else {
             inserirSimbolo($2, $1);
         }
