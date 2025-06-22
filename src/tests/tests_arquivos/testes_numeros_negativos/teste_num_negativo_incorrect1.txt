@@ -1,0 +1,5 @@
+inteiro a
+string b
+a <- -10
+b <- "abc"
+a <- a + b

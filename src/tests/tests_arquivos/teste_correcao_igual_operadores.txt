@@ -1,0 +1,11 @@
+inteiro x
+x <- 10
+
+inteiro y
+y <- 10
+
+se x = y então
+    imprima("Os valores são iguais")
+senão
+    imprima("Os valores são diferentes")
+fim-se

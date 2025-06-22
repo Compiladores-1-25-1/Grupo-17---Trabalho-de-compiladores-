@@ -1,0 +1,7 @@
+inteiro x
+
+x <- 5
+
+se x > então
+    imprima "Condicao inválida"
+fim-se

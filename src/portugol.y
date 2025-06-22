@@ -8,11 +8,9 @@
 int yylex(void);
 void yyerror(const char *s);
 void erro_semantico(const char *s);
-#define MAX_NIVEL 100
-int executando = 1;
-int exec_stack[MAX_NIVEL];
-int cond_stack[MAX_NIVEL];
-int exec_sp = 0;
+
+
+NoAST *programa_ast = NULL;
 %}
 
 %code requires {
@@ -38,6 +36,8 @@ int exec_sp = 0;
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
 %token MOD NOT_BIT
+%token ATRIBUICAO
+
 
 %union {
     int    intValue;
@@ -51,19 +51,39 @@ int exec_sp = 0;
 %token <floatValue>  REAL
 %token <strValue>    IDENTIFICADOR STRING CARACTERE
 
-%type <no>           expressao
+%type <no>           programa lista_comandos comando expressao comando_if comando_while
 %type <strValue>     expressao_string
 %type <tipo>         tipo_var
 
 %%
 
 programa:
-    lista_comandos
+    lista_comandos {
+        programa_ast = $1;
+        executarComando(programa_ast);
+    }
 ;
 
 lista_comandos:
-    lista_comandos comando
-  | comando
+    lista_comandos comando {
+        if ($1) {
+            NoAST *bloco = $1;
+            if (bloco->tipoNo != NO_BLOCO) {
+                NoAST *novo_bloco = criarNoBloco();
+                adicionarComandoBloco(novo_bloco, bloco);
+                adicionarComandoBloco(novo_bloco, $2);
+                $$ = novo_bloco;
+            } else {
+                adicionarComandoBloco(bloco, $2);
+                $$ = bloco;
+            }
+        } else {
+            $$ = $2;
+        }
+    }
+  | comando {
+        $$ = $1;
+    }
 ;
 
 tipo_var:
@@ -78,43 +98,15 @@ comando:
         if (buscarSimbolo($2)) {
             erro_semantico("A variavel ja foi declarada neste escopo");
         } else {
-            inserirSimbolo($2, $1);
+            $$ = criarNoDeclaracao($2, $1);
         }
         free($2);
     }
-  | IDENTIFICADOR '=' expressao '\n' {
-        Simbolo *s = buscarSimbolo($1);
-        if (!s) {
-            erro_semantico("ID nao declarado");
-            liberarAST($3);
-        } else {
-            NoAST* resultado = interpretar($3);
-            if(!resultado) {
-                erro_semantico("Erro na interpretação");
-                liberarAST($3);
-            } else {
-                if (s->tipo == resultado->tipo) {
-                    switch (s->tipo) {
-                        case TIPO_INT:
-                            s->valor.intValue = resultado->valor.intValue;
-                            break;
-                        case TIPO_REAL:
-                            s->valor.floatValue = resultado->valor.floatValue;
-                            break;
-                        default:
-                            erro_semantico("Atribuicao invalida a tipo nao suportado.");
-                            break;
-                    }
-                    liberarAST(resultado);
-                } else {
-                    erro_semantico("Tipos incompativeis na atribuicao.");
-                    liberarAST(resultado);
-                }
-            }
-        }
+  | IDENTIFICADOR ATRIBUICAO expressao '\n' {
+        $$ = criarNoAtribuicao($1, $3);
         free($1);
     }
-  | IDENTIFICADOR '=' expressao_string '\n' {
+  | IDENTIFICADOR ATRIBUICAO expressao_string '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             erro_semantico("ID nao declarado");
@@ -128,137 +120,83 @@ comando:
             free($3);
         }
         free($1);
+        free($3);
     }
   | IMPRIMA expressao '\n' {
-         if (executando) {
-            NoAST* resultado = interpretar($2);
-            if (resultado) {
-                imprimirValor(resultado);
-                printf("\n");
-                liberarAST(resultado);
-            } else {
-                erro_semantico("Erro ao interpretar expressão");
-            }
-        }
-        liberarAST($2);
+        $$ = criarNoImprima($2);
     }
   | IMPRIMA expressao_string '\n' {
-        if (executando) printf("%s\n", $2);
+        NoAST *no_string = malloc(sizeof(NoAST));
+        if (no_string) {
+            inicializarNo(no_string);
+            no_string->tipoNo = NO_NUMERO;
+            no_string->tipo = TIPO_STRING;
+            no_string->valor.strValue = strdup($2);
+        }
+        $$ = criarNoImprima(no_string);
         free($2);
     }
   | IMPRIMA IDENTIFICADOR '\n' {
-        Simbolo *s = buscarSimbolo($2);
-        if (!s) {
-            erro_semantico("ID nao declarado");
-        } else {
-            if (executando) {
-                NoAST *no_id = criarNoId($2, s->tipo);
-                NoAST* resultado = interpretar(no_id);
-                if (resultado) {
-                    imprimirValor(resultado);
-                    printf("\n");
-                    liberarAST(resultado);
-                }
-                liberarAST(no_id);
-            }
-        }
+        NoAST *no_id = criarNoId($2, TIPO_INT);
+        $$ = criarNoImprima(no_id);
         free($2);
     }
   | IMPRIMA '(' STRING ')' '\n' {
-        if (executando) printf("%s\n", $3);
+        NoAST *no_string = malloc(sizeof(NoAST));
+        if (no_string) {
+            inicializarNo(no_string);
+            no_string->tipoNo = NO_NUMERO;
+            no_string->tipo = TIPO_STRING;
+            no_string->valor.strValue = strdup($3);
+        }
+        $$ = criarNoImprima(no_string);
         free($3);
     }
   | LEIA IDENTIFICADOR '\n' {
-        Simbolo *s = buscarSimbolo($2);
-        if (!s) {
-            erro_semantico("Erro: Variavel nao declarada.");
-        } else if (s->tipo == TIPO_INT) {
-            printf("Digite um valor inteiro para %s: ", s->nome);
-            scanf("%d", &s->valor.intValue);
-        } else if (s->tipo == TIPO_REAL) {
-            printf("Digite um valor real para %s: ", s->nome);
-            scanf("%f", &s->valor.floatValue);
-        } else if (s->tipo == TIPO_STRING) {
-            printf("Digite um valor string para %s: ", s->nome);
-            s->valor.strValue = malloc(256);
-            if (!s->valor.strValue) {
-                erro_semantico("Erro ao alocar memoria para string.");
-            } else {
-                scanf("%255s", s->valor.strValue);
-            }
-        }
+        $$ = criarNoLeia($2);
         free($2);
     }
-    | SE expressao ENTAO '\n' {
-        
-        NoAST* resultado = interpretar($2);
-        if (!resultado || resultado->tipo != TIPO_INT) {
-            executando = 0;
-            if (resultado) liberarAST(resultado);
-            liberarAST($2);
-            YYABORT;
-        }
-
-        if (exec_sp >= MAX_NIVEL) {
-            liberarAST(resultado);
-            liberarAST($2);
-            exit(EXIT_FAILURE);
-        }
-
-       
-        exec_stack[exec_sp] = executando;
-        cond_stack[exec_sp] = resultado->valor.intValue;
-        executando = executando && resultado->valor.intValue;
-        
-        exec_sp++;
-
-        liberarAST($2);
+  | comando_if {
+        $$ = $1;
     }
-    lista_comandos comando_fim
+  | comando_while {
+        $$ = $1;
+    }
 ;
 
-// FIM_SE ou SENAO
-comando_fim:
-    FIM_SE '\n' {
-        if (exec_sp <= 0) {
-            fprintf(stderr, "[DEBUG] Erro: FIM_SE sem SE correspondente (exec_sp: %d)\n", exec_sp);
-            exit(EXIT_FAILURE);
-        }
-        exec_sp--;
-       
-        executando = exec_stack[exec_sp];
+comando_if:
+    SE expressao ENTAO '\n' lista_comandos FIM_SE '\n' {
+        $$ = criarNoIf($2, $5, NULL);
     }
-  | SENAO '\n' {
-        if (exec_sp <= 0) {
-            fprintf(stderr, "[DEBUG] Erro: SENAO sem SE correspondente (exec_sp: %d)\n", exec_sp);
-            exit(EXIT_FAILURE);
-        }
-        
-        executando = exec_stack[exec_sp - 1] && !cond_stack[exec_sp - 1];
+  | SE expressao ENTAO '\n' lista_comandos SENAO '\n' lista_comandos FIM_SE '\n' {
+        $$ = criarNoIf($2, $5, $8);
     }
-    lista_comandos
-    comando_fim
+;
+
+comando_while:
+    ENQUANTO expressao FACA '\n' lista_comandos FIM_SE '\n' {
+        $$ = criarNoWhile($2, $5);
+    }
 ;
 
 expressao:
-    expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); $$->tipo = $1->tipo;}
-  | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); $$->tipo = $1->tipo;}
-  | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); $$->tipo = $1->tipo;}
-  | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); $$->tipo = $1->tipo;}
-  | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); $$->tipo = TIPO_INT;}
-  | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); $$->tipo = TIPO_INT;}
-  | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); $$->tipo = TIPO_INT;}
-  | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); $$->tipo = TIPO_INT;}
-  | '(' expressao ')'               { $$ = $2; $$->tipo = $2->tipo;}
-  | INTEIRO                         { $$ = criarNoNum($1); $$->tipo = TIPO_INT;}
+    expressao '+' expressao         { $$ = criarNoOp('+', $1, $3); }
+  | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
+  | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
+  | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
+  | expressao MOD expressao         { $$ = criarNoOp('%', $1, $3); }
+  | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); }
+  | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); }
+  | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); }
+  | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); }
+  | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); }
+  | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
+  | '(' expressao ')'               { $$ = $2; }
+  | '-' expressao %prec UMINUS      {$$ = criarNoOp('-', criarNoNum(0), $2); }
+  | INTEIRO                         { $$ = criarNoNum($1); }
+  | REAL                            { $$ = criarNoReal($1); } 
   | IDENTIFICADOR {
-        Simbolo *s = buscarSimbolo($1);
-        if (!s) {
-            yyerror("Variavel nao declarada.");
-            $$ = criarNoNum(0); // Retorna um nó numérico para evitar erros em cascata
-        } else {
-            $$ = criarNoId($1, s->tipo);
-        }
+        $$ = criarNoId($1, TIPO_INT);
         free($1);
     }
 ;

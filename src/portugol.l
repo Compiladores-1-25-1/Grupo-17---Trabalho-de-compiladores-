@@ -23,15 +23,17 @@
 "faça"          { return FACA; }
 "imprima"       { return IMPRIMA; }
 "leia"          { return LEIA; }
-"inteiro"       {  yylval.strValue = strdup(yytext); 
+"inteiro"       {  yylval.strValue = strdup(yytext);
     return INTEIRO; }
-"real"          {  yylval.strValue = strdup(yytext); 
+"real"          {  yylval.strValue = strdup(yytext);
     return REAL; }
-"string"          {  yylval.strValue = strdup(yytext); 
+"string"          {  yylval.strValue = strdup(yytext);
     return STRING; }
-"caractere"          {  yylval.strValue = strdup(yytext); 
+"caractere"          {  yylval.strValue = strdup(yytext);
     return CARACTERE; }
 
+-([0-9]+"."[0-9]+)     { yylval.floatValue = atof(yytext); return REAL; }
+-([0-9]+)              { yylval.intValue = atoi(yytext); return INTEIRO; }
 [0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
@@ -48,11 +50,12 @@
 
 "("         { return '('; }
 ")"         { return ')'; }
-"="         { return '='; }
+"<-"        { return ATRIBUICAO; }
 "+"         { return '+'; }
 "-"         { return '-'; }
 "*"         { return '*'; }
 "/"         { return '/'; }
+"="         { return IGUAL; }
 "ou"        { return OR_LOGICO; }
 "e"         { return AND_LOGICO; }
 "não"       { return NOT_LOGICO; }
