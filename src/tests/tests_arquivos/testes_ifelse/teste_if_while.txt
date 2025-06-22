@@ -1,14 +1,14 @@
 inteiro x
 
-x = 1
+x <- 1
 
 se x > 0 então
     imprima "Entrou no IF"
 fim-se
 
-x = 3
+x <- 3
 
 enquanto x > 0 faça
     imprima x
-    x = x - 1
+    x <- x - 1
 fim-se

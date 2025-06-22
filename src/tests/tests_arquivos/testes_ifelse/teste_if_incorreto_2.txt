@@ -1,6 +1,6 @@
 inteiro x
 
-x = 10
+x <- 10
 
 senão
     imprima "Sem if"

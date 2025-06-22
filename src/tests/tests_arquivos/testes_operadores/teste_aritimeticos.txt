@@ -1,15 +1,15 @@
 inteiro a
-a = 10 + 2
+a <- 10 + 2
 imprima a
 
-a = a - 3
+a <- a - 3
 imprima a
 
-a = a * 2
+a <- a * 2
 imprima a
 
-a = a / 3
+a <- a / 3
 imprima a
 
-a = 10 % 3
+a <- 10 % 3
 imprima a

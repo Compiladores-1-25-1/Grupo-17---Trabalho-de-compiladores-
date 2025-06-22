@@ -1,6 +1,6 @@
 inteiro nota
 
-nota = 8
+nota <- 8
 
 se nota >= 7 então
     imprima "Aprovado"

@@ -1,6 +1,6 @@
 inteiro x
 
-x = 1
+x <- 1
 
 se x > 0 então
     imprima "Positivo1"

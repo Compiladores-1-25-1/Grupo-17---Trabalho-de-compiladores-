@@ -2,7 +2,7 @@ imprima 10 - 2 * 3
 
 inteiro x
 
-x = 10
+x <- 10
 
 se 10 > 2 então
 
@@ -18,6 +18,6 @@ imprima 10 * 2
 
 real x
 
-x = "0.0"
+x <- "0.0"
 
 imprima 10 / 0

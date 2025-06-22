@@ -1,7 +1,7 @@
 inteiro x
-x = 5
+x <- 5
 
-se x === 5 então
+se x == 5 então
     imprima "Erro: operador inválido '==='"
 fim-se
 
