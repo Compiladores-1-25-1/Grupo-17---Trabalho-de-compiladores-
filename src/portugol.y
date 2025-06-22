@@ -36,6 +36,8 @@ NoAST *programa_ast = NULL;
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
 %token MOD NOT_BIT
+%token ATRIBUICAO
+
 
 %union {
     int    intValue;
@@ -100,11 +102,11 @@ comando:
         }
         free($2);
     }
-  | IDENTIFICADOR '=' expressao '\n' {
+  | IDENTIFICADOR ATRIBUICAO expressao '\n' {
         $$ = criarNoAtribuicao($1, $3);
         free($1);
     }
-  | IDENTIFICADOR '=' expressao_string '\n' {
+  | IDENTIFICADOR ATRIBUICAO expressao_string '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             erro_semantico("ID nao declarado");

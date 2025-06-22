@@ -48,11 +48,12 @@
 
 "("         { return '('; }
 ")"         { return ')'; }
-"="         { return '='; }
+"<-"        { return ATRIBUICAO; }
 "+"         { return '+'; }
 "-"         { return '-'; }
 "*"         { return '*'; }
 "/"         { return '/'; }
+"="         { return IGUAL; }
 "ou"        { return OR_LOGICO; }
 "e"         { return AND_LOGICO; }
 "não"       { return NOT_LOGICO; }

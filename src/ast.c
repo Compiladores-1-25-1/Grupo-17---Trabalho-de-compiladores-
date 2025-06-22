@@ -268,7 +268,7 @@ void imprimirAST(NoAST *no) {
             printf("LEIA(%s)", no->nome);
             break;
         case NO_ATRIBUICAO:
-            printf("%s = ", no->nome);
+            printf("%s <- ", no->nome);
             imprimirAST(no->esquerda);
             break;
         case NO_DECLARACAO:
