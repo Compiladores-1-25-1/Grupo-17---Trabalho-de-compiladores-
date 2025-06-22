@@ -192,6 +192,7 @@ expressao:
   | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); }
   | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
   | '(' expressao ')'               { $$ = $2; }
+  | '-' expressao %prec UMINUS      {$$ = criarNoOp('-', criarNoNum(0), $2); }
   | INTEIRO                         { $$ = criarNoNum($1); }
   | REAL                            { $$ = criarNoReal($1); } 
   | IDENTIFICADOR {

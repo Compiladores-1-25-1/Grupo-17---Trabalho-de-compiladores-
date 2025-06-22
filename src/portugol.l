@@ -32,6 +32,8 @@
 "caractere"          {  yylval.strValue = strdup(yytext);
     return CARACTERE; }
 
+-([0-9]+"."[0-9]+)     { yylval.floatValue = atof(yytext); return REAL; }
+-([0-9]+)              { yylval.intValue = atoi(yytext); return INTEIRO; }
 [0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
