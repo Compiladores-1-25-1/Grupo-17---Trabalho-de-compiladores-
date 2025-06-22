@@ -184,6 +184,7 @@ expressao:
   | expressao '-' expressao         { $$ = criarNoOp('-', $1, $3); }
   | expressao '*' expressao         { $$ = criarNoOp('*', $1, $3); }
   | expressao '/' expressao         { $$ = criarNoOp('/', $1, $3); }
+  | expressao MOD expressao         { $$ = criarNoOp('%', $1, $3); }
   | expressao MAIOR expressao       { $$ = criarNoOp('>', $1, $3); }
   | expressao MENOR expressao       { $$ = criarNoOp('<', $1, $3); }
   | expressao IGUAL expressao       { $$ = criarNoOp('=', $1, $3); }
@@ -192,6 +193,7 @@ expressao:
   | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
   | '(' expressao ')'               { $$ = $2; }
   | INTEIRO                         { $$ = criarNoNum($1); }
+  | REAL                            { $$ = criarNoReal($1); } 
   | IDENTIFICADOR {
         $$ = criarNoId($1, TIPO_INT);
         free($1);

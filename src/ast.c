@@ -74,6 +74,21 @@ NoAST *criarNoNum(int val) {
     return no;
 }
 
+NoAST *criarNoReal(float val) {
+    NoAST *no = (NoAST *)malloc(sizeof(NoAST));
+    if (!no) {
+        fprintf(stderr, "[DEBUG] criarNoReal: ERRO - falha ao alocar memória\n");
+        return NULL;
+    }
+
+    inicializarNo(no);
+    no->tipoNo = NO_NUMERO;
+    no->tipo = TIPO_REAL;
+    no->valor.floatValue = val;
+
+    return no;
+}
+
 NoAST *criarNoId(char *nome, Tipo tipo) {
     NoAST *no = malloc(sizeof(NoAST));
     if (!no) {
@@ -533,16 +548,37 @@ NoAST* interpretar(NoAST *no) {
                 resultado->tipoNo = NO_NUMERO;
 
                 if (valEsq->tipo != valDir->tipo) {
-                    fprintf(stderr, "[DEBUG] interpretar: tipos incompatíveis - esq: %d, dir: %d\n",
-                            valEsq->tipo, valDir->tipo);
-                    free(resultado);
-                    liberarAST(valEsq);
-                    liberarAST(valDir);
-                    return NULL;
+                    if ((valEsq->tipo == TIPO_INT && valDir->tipo == TIPO_REAL) ||
+                        (valEsq->tipo == TIPO_REAL && valDir->tipo == TIPO_INT)) {
+                        NoAST *novoEsq = malloc(sizeof(NoAST));
+                        NoAST *novoDir = malloc(sizeof(NoAST));
+                        inicializarNo(novoEsq);
+                        inicializarNo(novoDir);
+                        novoEsq->tipoNo = NO_NUMERO;
+                        novoDir->tipoNo = NO_NUMERO;
+                        novoEsq->tipo = TIPO_REAL;
+                        novoDir->tipo = TIPO_REAL;
+                        novoEsq->valor.floatValue = (valEsq->tipo == TIPO_INT)
+                            ? (float)valEsq->valor.intValue : valEsq->valor.floatValue;
+                        novoDir->valor.floatValue = (valDir->tipo == TIPO_INT)
+                            ? (float)valDir->valor.intValue : valDir->valor.floatValue;
+
+                        liberarAST(valEsq);
+                        liberarAST(valDir);
+                        valEsq = novoEsq;
+                        valDir = novoDir;
+                        resultado->tipo = TIPO_REAL;
+                    } else {
+                        fprintf(stderr, "[DEBUG] interpretar: tipos incompatíveis - esq: %d, dir: %d\n",
+                                valEsq->tipo, valDir->tipo);
+                        free(resultado);
+                        liberarAST(valEsq);
+                        liberarAST(valDir);
+                        return NULL;
+                    }
+                } else {
+                    resultado->tipo = valEsq->tipo;
                 }
-
-                resultado->tipo = valEsq->tipo;
-
                 switch (no->operador) {
                     case '+':
                         if (resultado->tipo == TIPO_INT) {
@@ -600,6 +636,32 @@ NoAST* interpretar(NoAST *no) {
                             }
                         } else {
                             fprintf(stderr, "Erro: Operação '/' não suportada para o tipo.\n");
+                            free(resultado);
+                            liberarAST(valEsq);
+                            liberarAST(valDir);
+                            return NULL;
+                        }
+                        break;
+                    case '%':
+                        if (resultado->tipo == TIPO_INT || resultado->tipo == TIPO_REAL) {
+                            if ((valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) ||
+                                (valDir->tipo == TIPO_REAL && valDir->valor.floatValue == 0.0f)) {
+                            fprintf(stderr, "Erro: módulo por zero.\n");
+                            free(resultado);
+                            liberarAST(valEsq);
+                            liberarAST(valDir);
+                            return NULL;
+                            }
+                            if (resultado->tipo == TIPO_INT) {
+                                resultado->valor.intValue = valEsq->valor.intValue % valDir->valor.intValue;
+                            } else {
+                                float a = valEsq->valor.floatValue;
+                                float b = valDir->valor.floatValue;
+                                float quociente = (int)(a / b);
+                                resultado->valor.floatValue = a - (b * quociente);
+                            }
+                        } else {
+                            fprintf(stderr, "Erro: Operação '%%' não suportada para o tipo.\n");
                             free(resultado);
                             liberarAST(valEsq);
                             liberarAST(valDir);

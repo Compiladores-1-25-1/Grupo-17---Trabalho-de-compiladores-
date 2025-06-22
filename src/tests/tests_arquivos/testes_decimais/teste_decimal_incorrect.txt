@@ -1,0 +1,9 @@
+real numero
+string texto
+real resultado
+
+numero <- 10.5
+texto <- "10"
+
+resultado <- numero + texto
+imprima resultado

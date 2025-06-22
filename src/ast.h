@@ -6,6 +6,7 @@
 
 NoAST *criarNoOp(char op, NoAST *esq, NoAST *dir);
 NoAST *criarNoNum(int val);
+NoAST *criarNoReal(float val);
 NoAST *criarNoId(char *nome, Tipo tipo);
 
 
