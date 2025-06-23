@@ -625,7 +625,7 @@ NoAST* interpretar(NoAST *no) {
                         if (resultado->tipo == TIPO_INT || resultado->tipo == TIPO_REAL) {
                             if ((valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) ||
                                 (valDir->tipo == TIPO_REAL && valDir->valor.floatValue == 0.0)) {
-                                fprintf(stderr, "Erro: divisão por zero.\n");
+                                erro_semantico("Divisão por zero.");
                                 free(resultado);
                                 liberarAST(valEsq);
                                 liberarAST(valDir);
