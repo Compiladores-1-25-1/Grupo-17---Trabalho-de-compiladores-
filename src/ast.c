@@ -5,6 +5,8 @@
 #include "ast.h"
 #include "tabela.h" // Inclui para usar buscarSimbolo
 
+void erro_semantico(const char *s);
+
 // Função auxiliar para imprimir o valor de um nó, tratando diferentes tipos
 void imprimirValor(NoAST *no) {
     switch (no->tipo) {
