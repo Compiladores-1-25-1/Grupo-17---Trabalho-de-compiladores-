@@ -365,7 +365,7 @@ void executarComando(NoAST *no) {
                     printf("\n");
                     liberarAST(resultado);
                 } else {
-                    fprintf(stderr, "Erro ao interpretar expressão do IMPRIMA\n");
+                    erro_semantico("Erro ao interpretar expressão do IMPRIMA.");
                 }
             }
             break;
