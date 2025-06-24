@@ -65,11 +65,11 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 ### **Tarefas e Atividades**  
 
  - [x] **Criar** a lógica de interpretação recursiva (ex.: `interpretNode()`, que avalia nós de expressão/comando).  
- - [ ] **Consolidar** estruturas de controle (if, while, etc.), garantindo que a AST as represente adequadamente.  
+ - [x] **Consolidar** estruturas de controle (if, while, etc.), garantindo que a AST as represente adequadamente.  
  - [x] **Testar** o interpretador com programas de exemplo que demonstrem a execução de comandos básicos.  
  - [x] **Preencher** Formulário P2
  - [x] **Preparar** a apresentação P2, mostrando as novidades desde o P1 e a interpretação funcionando.  
- - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [x] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
  
 ---
 
