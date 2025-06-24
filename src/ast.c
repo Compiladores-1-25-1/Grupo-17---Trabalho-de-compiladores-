@@ -5,6 +5,8 @@
 #include "ast.h"
 #include "tabela.h" // Inclui para usar buscarSimbolo
 
+void erro_semantico(const char *s);
+
 // Função auxiliar para imprimir o valor de um nó, tratando diferentes tipos
 void imprimirValor(NoAST *no) {
     switch (no->tipo) {
@@ -363,7 +365,7 @@ void executarComando(NoAST *no) {
                     printf("\n");
                     liberarAST(resultado);
                 } else {
-                    fprintf(stderr, "Erro ao interpretar expressão do IMPRIMA\n");
+                    erro_semantico("Erro ao interpretar expressão do IMPRIMA.");
                 }
             }
             break;
@@ -623,7 +625,7 @@ NoAST* interpretar(NoAST *no) {
                         if (resultado->tipo == TIPO_INT || resultado->tipo == TIPO_REAL) {
                             if ((valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) ||
                                 (valDir->tipo == TIPO_REAL && valDir->valor.floatValue == 0.0)) {
-                                fprintf(stderr, "Erro: divisão por zero.\n");
+                                erro_semantico("Divisão por zero.");
                                 free(resultado);
                                 liberarAST(valEsq);
                                 liberarAST(valDir);
