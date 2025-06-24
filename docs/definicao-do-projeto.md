@@ -1,18 +1,18 @@
 # Definição do Projeto: Interpretador de Portugol
 ## Introdução
 
-O objetivo deste projeto é desenvolver um interpretador para o pseudocódigo de programação Portugol, voltado para a disciplina de Compiladores. O interpretador deverá ser capaz de ler, interpretar e executar programas simples escritos em Portugol, validando a sintaxe e executando as operações definidas. O foco é implementar as fases essenciais do compilador: análise léxica, sintática e execução.
+O objetivo deste projeto é desenvolver um interpretador para o pseudocódigo de programação Portugol, voltado para a disciplina de Compiladores. O interpretador foi implementado para ser capaz de ler, interpretar e executar programas simples escritos em Portugol, validando a sintaxe e executando as operações definidas. O interpretador reconhece e executa instruções escritas em Portugol, validando a estrutura sintática e semântica, e executando o programa por meio de uma Árvore Sintática Abstrata (AST).
 
 ## Descrição do Sistema
 O Portugol é pseudocódigo de fácil compreensão, com uma sintaxe semelhante à linguagem natural, o que facilita seu aprendizado. Ela é comumente utilizada no ensino de lógica de programação. O interpretador desenvolverá a capacidade de reconhecer e executar comandos básicos da linguagem.
 
-## Funcionalidades
+## Funcionalidades implementadas
 
-O interpretador implementará as seguintes funcionalidades:
+O interpretador possui as seguintes funcionalidades:
 
 - Analisador Léxico: Identificação de tokens, como palavras-chave, identificadores, operadores e literais.
 
-- Analisador Sintático: Verificação da estrutura gramatical do código, criando a árvore de sintaxe abstrata (AST).
+- Analisador Sintático : Verificação da estrutura gramatical do código, criando a árvore de sintaxe abstrata (AST).
 
 - Execução: O interpretador deve executar os programas, considerando as variáveis, controle de fluxo (condicionais e loops) e operações matemáticas.
 
@@ -27,10 +27,16 @@ O interpretador implementará as seguintes funcionalidades:
 
 ## Arquitetura
 ### Componentes Principais
-- Scanner (Analisador Léxico): Responsável por dividir o código em tokens.
-- Parser (Analisador Sintático): Responsável por verificar a sintaxe e construir a AST.
-- Executor: Responsável pela execução das instruções da AST.
-- Gerenciador de Erros: Responsável pela captura e exibição de erros léxicos, sintáticos e semânticos.
+
+|Componente|Arquivo|Descrição|
+|----------|-------|---------|
+| Scanner (Analisador Léxico) | portugol.l |  Responsável por dividir o código em tokens |
+| Parser (Analisador Sintático) | portugol.y |  Responsável por verificar a sintaxe e construir a AST |
+| AST | ast.h e ast.c | 	Representa o programa como uma estrutura hierárquica | 
+| Tabela de símbolos | tabela.h e tabela.c | Gerencia variáveis, tipos e valores |
+| Tipos | tipos.h | Define os tipos e estruturas base do sistema |
+| Executor |   | Responsável pela execução das instruções da AST|
+| Testes | tests/ | Arquivos de teste de implementações e erros | 
 
 ### Fluxo de Execução
 - O código-fonte é fornecido ao scanner, que converte o texto em tokens.
@@ -42,3 +48,4 @@ O interpretador implementará as seguintes funcionalidades:
 |Versão|Data  |
 |--|--|
 | 1.0 | 03/04/2025 | Criação do documento Definição do Projeto |
+| 2.0 | 23/06/2025 | Ajustes para entrega final |
