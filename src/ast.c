@@ -644,6 +644,21 @@ NoAST* interpretar(NoAST *no) {
                             return NULL;
                         }
                         break;
+                    case '&': // operador lógico "e"
+                        resultado->tipo = TIPO_INT;
+                        resultado->valor.intValue = (valEsq->valor.intValue && valDir->valor.intValue);
+                        break;
+
+                    case '|': // operador lógico "ou"
+                        resultado->tipo = TIPO_INT;
+                        resultado->valor.intValue = (valEsq->valor.intValue || valDir->valor.intValue);
+                        break;
+
+                    case '!': // operador lógico "não"
+                        resultado->tipo = TIPO_INT;
+                        resultado->valor.intValue = !(valDir->valor.intValue);  
+                        break;
+
                     case '%':
                         if (resultado->tipo == TIPO_INT || resultado->tipo == TIPO_REAL) {
                             if ((valDir->tipo == TIPO_INT && valDir->valor.intValue == 0) ||
@@ -673,7 +688,6 @@ NoAST* interpretar(NoAST *no) {
                     case '>':
                     case '<':
                     case '=':
-                    case '!':
                     case 'G': //MAIOR_IGUAL
                     case 'L': //MENOR_IGUAL
                         resultado->tipo = TIPO_INT;  // Operadores de comparação retornam um inteiro (0 ou 1)

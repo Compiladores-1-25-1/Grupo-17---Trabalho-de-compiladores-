@@ -191,6 +191,10 @@ expressao:
   | expressao DIFERENTE expressao   { $$ = criarNoOp('!', $1, $3); }
   | expressao MAIOR_IGUAL expressao { $$ = criarNoOp('G', $1, $3); }
   | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
+  | expressao AND_LOGICO expressao   { $$ = criarNoOp('&', $1, $3); }
+  | expressao OR_LOGICO  expressao   { $$ = criarNoOp('|', $1, $3); }
+  | NOT_LOGICO expressao %prec NOT_LOGICO { $$ = criarNoOp('!', criarNoNum(1), $2); }
+
   | '(' expressao ')'               { $$ = $2; }
   | '-' expressao %prec UMINUS      {$$ = criarNoOp('-', criarNoNum(0), $2); }
   | INTEIRO                         { $$ = criarNoNum($1); }

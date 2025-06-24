@@ -6,6 +6,7 @@ typedef enum {
     TIPO_INT,
     TIPO_REAL,
     TIPO_STRING,
+    TIPO_BOOL,
     TIPO_ERRO
 } Tipo;
 

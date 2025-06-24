@@ -23,6 +23,9 @@
 "faça"          { return FACA; }
 "imprima"       { return IMPRIMA; }
 "leia"          { return LEIA; }
+"ou"            { return OR_LOGICO; }
+"e"             { return AND_LOGICO; }
+"não"           { return NOT_LOGICO; }
 "inteiro"       {  yylval.strValue = strdup(yytext);
     return INTEIRO; }
 "real"          {  yylval.strValue = strdup(yytext);
@@ -56,9 +59,6 @@
 "*"         { return '*'; }
 "/"         { return '/'; }
 "="         { return IGUAL; }
-"ou"        { return OR_LOGICO; }
-"e"         { return AND_LOGICO; }
-"não"       { return NOT_LOGICO; }
 "|"         { return OR_BIT; }
 "&"         { return AND_BIT; }
 "ˆ"         { return XOR_BIT; }
