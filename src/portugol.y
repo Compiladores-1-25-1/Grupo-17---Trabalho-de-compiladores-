@@ -38,6 +38,7 @@ NoAST *programa_ast = NULL;
 %token MOD NOT_BIT
 %token ATRIBUICAO
 %token BOOLEANO VERDADEIRO FALSO
+%token VAZIO
 
 
 
@@ -93,8 +94,9 @@ tipo_var:
     INTEIRO { $$ = TIPO_INT; }
   | REAL    { $$ = TIPO_REAL; }
   | STRING  { $$ = TIPO_STRING; }
-  | CARACTERE { $$ = TIPO_STRING; }
+  | CARACTERE { $$ = TIPO_CHAR; }
   | BOOLEANO { $$ = TIPO_BOOL; }
+  | VAZIO     { $$ = TIPO_VAZIO; }
 
 ;
 
@@ -213,7 +215,8 @@ expressao:
 ;
 
 expressao_string:
-    STRING { $$ = strdup($1); }
+     STRING     { $$ = strdup($1); }
+  | CARACTERE  { $$ = strdup($1); }
 ;
 
 %%

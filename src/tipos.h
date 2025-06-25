@@ -7,6 +7,8 @@ typedef enum {
     TIPO_REAL,
     TIPO_STRING,
     TIPO_BOOL,
+    TIPO_VAZIO,
+    TIPO_CHAR,
     TIPO_ERRO
 } Tipo;
 

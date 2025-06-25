@@ -22,6 +22,12 @@ void imprimirValor(NoAST *no) {
         case TIPO_BOOL:
             printf("%s", no->valor.intValue ? "verdadeiro" : "falso");
             break;
+        case TIPO_VAZIO:
+            printf("null");
+            break;
+        case TIPO_CHAR:
+            printf("%c", no->valor.strValue[0]);
+            break;
 
         default:
             printf("Tipo desconhecido");
@@ -359,7 +365,9 @@ void executarComando(NoAST *no) {
                 }
 
                 if (tiposCompativeis(s->tipo, resultado->tipo)) {
-                    if (s->tipo == TIPO_BOOL) {
+                    if (s->tipo == TIPO_VAZIO) {
+                        fprintf(stderr, "Erro: Não é permitido atribuir valor a uma variável do tipo vazio\n");
+                    } else if (s->tipo == TIPO_BOOL) {
                         s->valor.intValue = resultado->valor.intValue ? 1 : 0;
                     } else if (s->tipo == TIPO_INT && resultado->tipo == TIPO_BOOL) {
                         s->valor.intValue = resultado->valor.intValue;
@@ -370,11 +378,16 @@ void executarComando(NoAST *no) {
                     } else if (s->tipo == TIPO_STRING) {
                         if (s->valor.strValue) free(s->valor.strValue);
                         s->valor.strValue = resultado->valor.strValue ? strdup(resultado->valor.strValue) : NULL;
+                    } else if (s->tipo == TIPO_CHAR) {
+                        if (s->valor.strValue) free(s->valor.strValue);
+                        s->valor.strValue = resultado->valor.strValue ? strdup(resultado->valor.strValue) : NULL;
                     } else {
                         fprintf(stderr, "Erro: Tipo não suportado na atribuição\n");
                     }
-
+                } else {
+                    fprintf(stderr, "Erro: Tipos incompatíveis na atribuição\n");
                 }
+
                 liberarAST(resultado);
             }
             break;
@@ -516,6 +529,10 @@ NoAST* interpretar(NoAST *no) {
                     case TIPO_BOOL:
                         resultado->valor.intValue = s->valor.intValue;
                         break;
+                    case TIPO_VAZIO:
+                        resultado->valor.strValue = NULL;  // ou apenas mantenha null
+                        break;
+
 
                     default:
                         fprintf(stderr, "[DEBUG] interpretar: tipo desconhecido para variável %s\n", no->nome);
@@ -546,7 +563,10 @@ NoAST* interpretar(NoAST *no) {
                     resultado->valor.strValue = strdup(no->valor.strValue);
                 } else if (no->tipo == TIPO_BOOL) {
                     resultado->valor.intValue = no->valor.intValue;
-                } else {
+                } else if (no->tipo == TIPO_CHAR && no->valor.strValue) {
+                     resultado->valor.strValue = strdup(no->valor.strValue); 
+                }
+                else {
                     fprintf(stderr, "Erro: tipo não suportado no nó número\n");
                     free(resultado);
                     return NULL;

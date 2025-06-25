@@ -43,6 +43,13 @@ void inserirSimbolo(char *nome, Tipo tipo) {
          case TIPO_BOOL:
             s->valor.intValue = 0; // falso
             break;
+        case TIPO_CHAR:
+            s->valor.strValue = strdup(" ");
+            break;
+
+        case TIPO_VAZIO:
+            // Nenhum valor a ser inicializado
+            break;
         default:
             fprintf(stderr, "Erro: Tipo desconhecido ao inserir símbolo.\n");
             free(s->nome);

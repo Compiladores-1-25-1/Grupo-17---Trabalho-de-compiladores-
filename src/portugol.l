@@ -26,6 +26,7 @@
 "ou"            { return OR_LOGICO; }
 "e"             { return AND_LOGICO; }
 "não"           { return NOT_LOGICO; }
+"vazio"         { return VAZIO; }
 "booleano"      { yylval.strValue = strdup(yytext); return BOOLEANO; }
 "verdadeiro"    { yylval.intValue = 1; return VERDADEIRO; }
 "falso"         { yylval.intValue = 0; return FALSO; }
@@ -43,11 +44,22 @@
 [0-9]+"."[0-9]+     { yylval.floatValue = atof(yytext); return REAL; }
 [0-9]+              { yylval.intValue = atoi(yytext); return INTEIRO; }
 
+
+\'[^\']\' {
+    yylval.strValue = (char *) malloc(2);
+    yylval.strValue[0] = yytext[1];
+    yylval.strValue[1] = '\0';
+    return CARACTERE;
+}
+
+
+
 \"([^\\\"]|\\.)*\"  {
     yytext[yyleng - 1] = '\0';                // Remove aspa final
     yylval.strValue = strdup(yytext + 1);     // Remove aspa inicial
     return STRING;  // Alterado de CARACTERE para STRING
 }
+
 
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.strValue = strdup(yytext);  // Armazena o nome do identificador em yylval

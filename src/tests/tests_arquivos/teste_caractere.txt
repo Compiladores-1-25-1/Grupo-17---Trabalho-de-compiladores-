@@ -1,0 +1,3 @@
+caractere letra
+letra <- 'Z'
+imprima letra
