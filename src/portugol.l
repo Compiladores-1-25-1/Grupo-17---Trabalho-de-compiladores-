@@ -26,6 +26,9 @@
 "ou"            { return OR_LOGICO; }
 "e"             { return AND_LOGICO; }
 "não"           { return NOT_LOGICO; }
+"booleano"      { yylval.strValue = strdup(yytext); return BOOLEANO; }
+"verdadeiro"    { yylval.intValue = 1; return VERDADEIRO; }
+"falso"         { yylval.intValue = 0; return FALSO; }
 "inteiro"       {  yylval.strValue = strdup(yytext);
     return INTEIRO; }
 "real"          {  yylval.strValue = strdup(yytext);

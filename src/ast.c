@@ -19,6 +19,10 @@ void imprimirValor(NoAST *no) {
         case TIPO_STRING:
             printf("%s", no->valor.strValue);
             break;
+        case TIPO_BOOL:
+            printf("%s", no->valor.intValue ? "verdadeiro" : "falso");
+            break;
+
         default:
             printf("Tipo desconhecido");
             break;
@@ -253,8 +257,24 @@ void imprimirAST(NoAST *no) {
             printf(")");
             break;
         case NO_NUMERO:
-            printf("%d", no->valor.intValue);
-            break;
+            switch (no->tipo) {
+                case TIPO_INT:
+                    printf("%d", no->valor.intValue);
+                    break;
+                case TIPO_REAL:
+                    printf("%f", no->valor.floatValue);
+                    break;
+                case TIPO_STRING:
+                    printf("\"%s\"", no->valor.strValue);
+                    break;
+                case TIPO_BOOL:
+                    printf("%s", no->valor.intValue ? "verdadeiro" : "falso");
+                    break;
+                default:
+                    printf("<?>");
+                    break;
+            }
+        break;
         case NO_IDENTIFICADOR:
             printf("%s", no->nome);
             break;
@@ -305,8 +325,12 @@ void imprimirAST(NoAST *no) {
 }
 
 int tiposCompativeis(Tipo t1, Tipo t2) {
+    if ((t1 == TIPO_BOOL && t2 == TIPO_INT) || (t1 == TIPO_INT && t2 == TIPO_BOOL)) {
+        return 1;
+    }
     return t1 == t2;
 }
+
 
 void executarComando(NoAST *no) {
     if (!no) return;
@@ -334,24 +358,22 @@ void executarComando(NoAST *no) {
                     return;
                 }
 
-                if (s->tipo == resultado->tipo) {
-                    switch (s->tipo) {
-                        case TIPO_INT:
-                            s->valor.intValue = resultado->valor.intValue;
-                            break;
-                        case TIPO_REAL:
-                            s->valor.floatValue = resultado->valor.floatValue;
-                            break;
-                        case TIPO_STRING:
-                            if (s->valor.strValue) free(s->valor.strValue);
-                            s->valor.strValue = resultado->valor.strValue ? strdup(resultado->valor.strValue) : NULL;
-                            break;
-                        default:
-                            fprintf(stderr, "Erro: Tipo não suportado na atribuição\n");
-                            break;
+                if (tiposCompativeis(s->tipo, resultado->tipo)) {
+                    if (s->tipo == TIPO_BOOL) {
+                        s->valor.intValue = resultado->valor.intValue ? 1 : 0;
+                    } else if (s->tipo == TIPO_INT && resultado->tipo == TIPO_BOOL) {
+                        s->valor.intValue = resultado->valor.intValue;
+                    } else if (s->tipo == TIPO_INT) {
+                        s->valor.intValue = resultado->valor.intValue;
+                    } else if (s->tipo == TIPO_REAL) {
+                        s->valor.floatValue = resultado->valor.floatValue;
+                    } else if (s->tipo == TIPO_STRING) {
+                        if (s->valor.strValue) free(s->valor.strValue);
+                        s->valor.strValue = resultado->valor.strValue ? strdup(resultado->valor.strValue) : NULL;
+                    } else {
+                        fprintf(stderr, "Erro: Tipo não suportado na atribuição\n");
                     }
-                } else {
-                    fprintf(stderr, "Erro: Tipos incompatíveis na atribuição\n");
+
                 }
                 liberarAST(resultado);
             }
@@ -392,6 +414,12 @@ void executarComando(NoAST *no) {
                         scanf("%255s", s->valor.strValue);
                     }
                 }
+
+                else if (s->tipo == TIPO_BOOL) {
+                    printf("Digite 1 para verdadeiro ou 0 para falso (%s): ", s->nome);
+                    scanf("%d", &s->valor.intValue);
+                }
+
             }
             break;
 
@@ -485,6 +513,10 @@ NoAST* interpretar(NoAST *no) {
                     case TIPO_STRING:
                         resultado->valor.strValue = s->valor.strValue ? strdup(s->valor.strValue) : NULL;
                         break;
+                    case TIPO_BOOL:
+                        resultado->valor.intValue = s->valor.intValue;
+                        break;
+
                     default:
                         fprintf(stderr, "[DEBUG] interpretar: tipo desconhecido para variável %s\n", no->nome);
                         free(resultado);
@@ -512,7 +544,17 @@ NoAST* interpretar(NoAST *no) {
                     resultado->valor.floatValue = no->valor.floatValue;
                 } else if (no->tipo == TIPO_STRING && no->valor.strValue) {
                     resultado->valor.strValue = strdup(no->valor.strValue);
+                } else if (no->tipo == TIPO_BOOL) {
+                    resultado->valor.intValue = no->valor.intValue;
+                } else {
+                    fprintf(stderr, "Erro: tipo não suportado no nó número\n");
+                    free(resultado);
+                    return NULL;
                 }
+                resultado->tipo = no->tipo;
+
+
+                
 
                 return resultado;
             }
@@ -549,9 +591,14 @@ NoAST* interpretar(NoAST *no) {
                 inicializarNo(resultado);
                 resultado->tipoNo = NO_NUMERO;
 
-                if (valEsq->tipo != valDir->tipo) {
-                    if ((valEsq->tipo == TIPO_INT && valDir->tipo == TIPO_REAL) ||
-                        (valEsq->tipo == TIPO_REAL && valDir->tipo == TIPO_INT)) {
+                // Compatibilização de tipos
+                    if ((valEsq->tipo == TIPO_BOOL && valDir->tipo == TIPO_INT) ||
+                        (valEsq->tipo == TIPO_INT && valDir->tipo == TIPO_BOOL)) {
+                        valEsq->tipo = TIPO_INT;
+                        valDir->tipo = TIPO_INT;
+                        resultado->tipo = TIPO_INT;
+                    } else if ((valEsq->tipo == TIPO_INT && valDir->tipo == TIPO_REAL) ||
+                            (valEsq->tipo == TIPO_REAL && valDir->tipo == TIPO_INT)) {
                         NoAST *novoEsq = malloc(sizeof(NoAST));
                         NoAST *novoDir = malloc(sizeof(NoAST));
                         inicializarNo(novoEsq);
@@ -570,17 +617,17 @@ NoAST* interpretar(NoAST *no) {
                         valEsq = novoEsq;
                         valDir = novoDir;
                         resultado->tipo = TIPO_REAL;
-                    } else {
+                    } else if (valEsq->tipo != valDir->tipo) {
                         fprintf(stderr, "[DEBUG] interpretar: tipos incompatíveis - esq: %d, dir: %d\n",
                                 valEsq->tipo, valDir->tipo);
                         free(resultado);
                         liberarAST(valEsq);
                         liberarAST(valDir);
                         return NULL;
+                    } else {
+                        resultado->tipo = valEsq->tipo;
                     }
-                } else {
-                    resultado->tipo = valEsq->tipo;
-                }
+
                 switch (no->operador) {
                     case '+':
                         if (resultado->tipo == TIPO_INT) {

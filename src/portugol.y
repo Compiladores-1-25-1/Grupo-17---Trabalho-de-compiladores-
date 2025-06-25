@@ -37,6 +37,8 @@ NoAST *programa_ast = NULL;
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
 %token MOD NOT_BIT
 %token ATRIBUICAO
+%token BOOLEANO VERDADEIRO FALSO
+
 
 
 %union {
@@ -50,6 +52,7 @@ NoAST *programa_ast = NULL;
 %token <intValue>    INTEIRO
 %token <floatValue>  REAL
 %token <strValue>    IDENTIFICADOR STRING CARACTERE
+
 
 %type <no>           programa lista_comandos comando expressao comando_if comando_while
 %type <strValue>     expressao_string
@@ -91,6 +94,8 @@ tipo_var:
   | REAL    { $$ = TIPO_REAL; }
   | STRING  { $$ = TIPO_STRING; }
   | CARACTERE { $$ = TIPO_STRING; }
+  | BOOLEANO { $$ = TIPO_BOOL; }
+
 ;
 
 comando:
@@ -106,7 +111,7 @@ comando:
         $$ = criarNoAtribuicao($1, $3);
         free($1);
     }
-  | IDENTIFICADOR ATRIBUICAO expressao_string '\n' {
+    | IDENTIFICADOR ATRIBUICAO expressao_string '\n' {
         Simbolo *s = buscarSimbolo($1);
         if (!s) {
             erro_semantico("ID nao declarado");
@@ -114,7 +119,6 @@ comando:
         } else if (s->tipo == TIPO_STRING) {
             if (s->valor.strValue) free(s->valor.strValue);
             s->valor.strValue = strdup($3);
-            free($3);
         } else {
             erro_semantico("Atribuicao de string a variavel do tipo diferente de string");
             free($3);
@@ -193,6 +197,9 @@ expressao:
   | expressao MENOR_IGUAL expressao { $$ = criarNoOp('L', $1, $3); }
   | expressao AND_LOGICO expressao   { $$ = criarNoOp('&', $1, $3); }
   | expressao OR_LOGICO  expressao   { $$ = criarNoOp('|', $1, $3); }
+  | VERDADEIRO { $$ = criarNoNum(1); $$->tipo = TIPO_BOOL; }
+  | FALSO      { $$ = criarNoNum(0); $$->tipo = TIPO_BOOL; }
+
   | NOT_LOGICO expressao %prec NOT_LOGICO { $$ = criarNoOp('!', criarNoNum(1), $2); }
 
   | '(' expressao ')'               { $$ = $2; }
