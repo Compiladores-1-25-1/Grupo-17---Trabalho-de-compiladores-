@@ -80,6 +80,10 @@ void imprimirTabela() {
             } else if (s->tipo == TIPO_STRING) {
                 //Verificando se a string é nula
                 printf("string, Valor: %s\n", s->valor.strValue ? s->valor.strValue : "(null)");
+            } else if (s->tipo == TIPO_CHAR) {
+                printf("char, Valor: %s\n", s->valor.strValue ? s->valor.strValue : "(null)");
+            } else if (s->tipo == TIPO_BOOL) {
+                printf("bool, Valor: %s\n", s->valor.intValue ? "verdadeiro" : "falso");
             } else {
                 printf("desconhecido\n");
             }
@@ -94,8 +98,8 @@ void liberarTabela() {
             Simbolo *temp = s;
             s = s->proximo;
             free(temp->nome);
-            if (temp->tipo == TIPO_STRING && temp->valor.strValue) {
-                free(temp->valor.strValue); // Libera a string, se alocada
+            if ((temp->tipo == TIPO_STRING || temp->tipo == TIPO_CHAR) && temp->valor.strValue) {
+                free(temp->valor.strValue); // Libera a string/char, se alocada
             }
             free(temp);
         }

@@ -334,6 +334,9 @@ int tiposCompativeis(Tipo t1, Tipo t2) {
     if ((t1 == TIPO_BOOL && t2 == TIPO_INT) || (t1 == TIPO_INT && t2 == TIPO_BOOL)) {
         return 1;
     }
+    if ((t1 == TIPO_CHAR && t2 == TIPO_STRING) || (t1 == TIPO_STRING && t2 == TIPO_CHAR)) {
+        return 1;
+    }
     return t1 == t2;
 }
 
@@ -425,6 +428,16 @@ void executarComando(NoAST *no) {
                     s->valor.strValue = malloc(256);
                     if (s->valor.strValue) {
                         scanf("%255s", s->valor.strValue);
+                    }
+                } else if (s->tipo == TIPO_CHAR) {
+                    printf("Digite um caractere para %s: ", s->nome);
+                    if (s->valor.strValue) free(s->valor.strValue);
+                    s->valor.strValue = malloc(2);
+                    if (s->valor.strValue) {
+                        char c;
+                        scanf(" %c", &c);
+                        s->valor.strValue[0] = c;
+                        s->valor.strValue[1] = '\0';
                     }
                 }
 
@@ -526,6 +539,9 @@ NoAST* interpretar(NoAST *no) {
                     case TIPO_STRING:
                         resultado->valor.strValue = s->valor.strValue ? strdup(s->valor.strValue) : NULL;
                         break;
+                    case TIPO_CHAR:
+                        resultado->valor.strValue = s->valor.strValue ? strdup(s->valor.strValue) : NULL;
+                        break;
                     case TIPO_BOOL:
                         resultado->valor.intValue = s->valor.intValue;
                         break;
@@ -564,7 +580,7 @@ NoAST* interpretar(NoAST *no) {
                 } else if (no->tipo == TIPO_BOOL) {
                     resultado->valor.intValue = no->valor.intValue;
                 } else if (no->tipo == TIPO_CHAR && no->valor.strValue) {
-                     resultado->valor.strValue = strdup(no->valor.strValue); 
+                     resultado->valor.strValue = strdup(no->valor.strValue);
                 }
                 else {
                     fprintf(stderr, "Erro: tipo não suportado no nó número\n");
@@ -574,7 +590,7 @@ NoAST* interpretar(NoAST *no) {
                 resultado->tipo = no->tipo;
 
 
-                
+
 
                 return resultado;
             }
@@ -723,7 +739,7 @@ NoAST* interpretar(NoAST *no) {
 
                     case '!': // operador lógico "não"
                         resultado->tipo = TIPO_INT;
-                        resultado->valor.intValue = !(valDir->valor.intValue);  
+                        resultado->valor.intValue = !(valDir->valor.intValue);
                         break;
 
                     case '%':

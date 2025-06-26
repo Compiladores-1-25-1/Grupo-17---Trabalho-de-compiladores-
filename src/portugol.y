@@ -114,17 +114,19 @@ comando:
         free($1);
     }
     | IDENTIFICADOR ATRIBUICAO expressao_string '\n' {
-        Simbolo *s = buscarSimbolo($1);
-        if (!s) {
-            erro_semantico("ID nao declarado");
-            free($3);
-        } else if (s->tipo == TIPO_STRING) {
-            if (s->valor.strValue) free(s->valor.strValue);
-            s->valor.strValue = strdup($3);
-        } else {
-            erro_semantico("Atribuicao de string a variavel do tipo diferente de string");
-            free($3);
+        NoAST *no_string = malloc(sizeof(NoAST));
+        if (no_string) {
+            inicializarNo(no_string);
+            no_string->tipoNo = NO_NUMERO;
+            // Determina se é CHAR (1 caractere) ou STRING (mais de 1)
+            if (strlen($3) == 1) {
+                no_string->tipo = TIPO_CHAR;
+            } else {
+                no_string->tipo = TIPO_STRING;
+            }
+            no_string->valor.strValue = strdup($3);
         }
+        $$ = criarNoAtribuicao($1, no_string);
         free($1);
         free($3);
     }
@@ -207,7 +209,7 @@ expressao:
   | '(' expressao ')'               { $$ = $2; }
   | '-' expressao %prec UMINUS      {$$ = criarNoOp('-', criarNoNum(0), $2); }
   | INTEIRO                         { $$ = criarNoNum($1); }
-  | REAL                            { $$ = criarNoReal($1); } 
+  | REAL                            { $$ = criarNoReal($1); }
   | IDENTIFICADOR {
         $$ = criarNoId($1, TIPO_INT);
         free($1);
