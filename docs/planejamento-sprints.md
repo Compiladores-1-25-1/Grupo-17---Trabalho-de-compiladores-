@@ -81,11 +81,10 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ] **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
- - [ ] **Estender** a linguagem com novos recursos (desde que caiba no cronograma). 
- - [ ] **Testar** intensivamente (abordando construções avançadas e casos-limite).  
- - [ ] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
- - [ ] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
+ - [x] **Implementar otimizações** simples (constant folding, remoção de nós redundantes, etc.).
+ - [x] **Testar** intensivamente (abordando construções avançadas e casos-limite).  
+ - [x] **Entregar** o projeto final (repositório atualizado, acesso ao professor, e arquivo zip, se exigido).  
+ - [x] **Montagem da documentação**: elaborar e validar as documentações que serão entregues.
 
 ---
 
@@ -97,7 +96,7 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 
 ### **Tarefas e Atividades**  
 
- - [ ] **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
+ - [x] **Preparar-se** para as entrevistas: cada membro deve entender bem o parser, a AST, a análise semântica e o interpretador.  
  - [ ] **Corrigir** eventuais falhas apontadas pelo professor durante as entrevistas ou testes.
  - [ ] **Finalizar** documentação e organizar exemplos de uso.  
 
@@ -128,3 +127,4 @@ Abaixo tem um quadro exemplificando como funcionaram as sprints planejadas pelo 
 | 1.0 | 03/04/2025 | Criação do documento de Planejamento das Sprints |
 | 1.1 | 19/04/2025 | Inclusão do link para o Notion |
 | 1.2 | 24/04/2025 | Atualização das tarefas da Sprint 2 |
+| 2.0 | 26/06/2025 | Finalizações |

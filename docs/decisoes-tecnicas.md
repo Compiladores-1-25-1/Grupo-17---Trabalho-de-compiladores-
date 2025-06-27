@@ -23,9 +23,7 @@ Esses tipos serão usados para declarar variáveis e constantes, e o interpretad
 ### Declarações
 O interpretador suportará as seguintes declarações essenciais:
 
-- Declaração de Variáveis;
-- Declaração de Funções;
-- Declaração de Matrizes;
+- Declaração de Variáveis.
 
 ### Entrada e Saída
 O interpretador incluirá operações básicas de entrada e saída:
@@ -51,8 +49,30 @@ O interpretador implementará as seguintes estruturas de controle:
 
 - Laços de Repetição: Para executar comandos repetidamente enquanto uma condição for verdadeira.
 
-### Funções
-Funções serão suportadas.
+### Testes
+Os testes foram organizados para validar diferentes aspectos do compilador de Portugol, incluindo análise léxica, sintática, semântica e geração da AST. Cada teste foi escrito como um arquivo .txt com trechos de código em Portugol, simulando diferentes situações da linguagem, desde estruturas básicas até casos de erro. Esses testes estão agrupados em diretórios conforme o tipo de funcionalidade testada, facilitando a manutenção e a identificação de falhas específicas no comportamento do compilador.
+
+- Diretório src/tests/
+
+    - tests.sh: script responsável por executar os testes.
+
+    - portugol: binário do interpretador/compilador.
+
+    - tests_arquivos/: pasta dos arquivos de teste organizados por tipo.
+
+- Subdiretórios de tests_arquivos/
+    - testes_ast:	Geração e validação da Árvore Sintática Abstrata (AST)
+    - testes_basicos:	Testes simples de sintaxe e execução
+    - testes_decimais:	Expressões com números decimais e operações com real
+    - testes_ifelse:	Testes com estruturas condicionais se e senao
+    - testes_numeros_negativos:	Expressões com números negativos e validação de sinais
+    - testes_operadores:	Testes de operadores aritméticos e lógicos (+, -, e, ou, etc)
+- Arquivos de teste individuais
+    - teste_booleano.txt:	Testes com valores booleanos (verdadeiro / falso)
+    - teste_caractere.txt: 	Declarações e uso de variáveis do tipo char
+    - teste_correcao_igual_operadores.txt:	Correção e verificação de operadores de comparação
+    - teste_logico.txt:	Expressões com operadores lógicos e, ou, nao
+    - teste_vazio_erro_incompativel.txt:	Erros relacionados a tipo vazio e incompatibilidades
 
 ## Linguagem e Ferramentas
 ### Flex (Analisador Léxico)
@@ -78,4 +98,5 @@ O interpretador incluirá um sistema de tratamento de erros para verificar erros
 |Versão|Data  |
 |--|--|
 | 1.0 | 13/04/2025 | Criação do documento Decisões Técnicas |
+| 2.0 | 26/06/2025 | Inclusão dos testes |
 
