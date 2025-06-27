@@ -23,6 +23,7 @@
 "faça"          { return FACA; }
 "para"          { return PARA; }
 "até"           { return ATE; }
+"passo"         { return PASSO; }
 "repita"        { return REPITA; }
 "fim-para"      { return FIM_PARA; }
 "fim-repita"    { return FIM_REPITA; }

@@ -1,0 +1,4 @@
+inteiro i
+para i <- 1 até "fim"
+    imprima i
+fim-para

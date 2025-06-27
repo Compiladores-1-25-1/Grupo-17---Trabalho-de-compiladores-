@@ -32,7 +32,7 @@ NoAST *programa_ast = NULL;
 
 %token SE ENTAO SENAO FIM_SE
 %token ENQUANTO FACA IMPRIMA LEIA
-%token PARA ATE REPITA FIM_PARA FIM_REPITA
+%token PARA ATE PASSO REPITA FIM_PARA FIM_REPITA
 %token OR_LOGICO AND_LOGICO NOT_LOGICO
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
@@ -56,7 +56,7 @@ NoAST *programa_ast = NULL;
 %token <strValue>    IDENTIFICADOR STRING CARACTERE
 
 
-%type <no>           programa lista_comandos comando expressao comando_if comando_while comando_para comando_repita
+%type <no>           programa lista_comandos comando expressao comando_if comando_while comando_para comando_repita passo_opcional
 %type <strValue>     expressao_string
 %type <tipo>         tipo_var
 
@@ -198,12 +198,12 @@ comando_while:
 ;
 
 comando_para:
-    PARA IDENTIFICADOR ATRIBUICAO expressao ATE expressao '\n' lista_comandos FIM_PARA '\n' {
+    PARA IDENTIFICADOR ATRIBUICAO expressao ATE expressao passo_opcional '\n' lista_comandos FIM_PARA '\n' {
         NoAST *inicio = criarNoAtribuicao($2, $4);
-        NoAST *condicao = criarNoOp('L', criarNoId($2, TIPO_INT), $6); // enquanto id <= até
-        NoAST *incremento = criarNoAtribuicao($2, criarNoOp('+', criarNoId($2, TIPO_INT), criarNoNum(1)));
+        NoAST *condicao = criarNoOp('L', criarNoId($2, TIPO_INT), $6);
+        NoAST *incremento = criarNoAtribuicao($2, criarNoOp('+', criarNoId($2, TIPO_INT), $7));
         NoAST *bloco = criarNoBloco();
-        adicionarComandoBloco(bloco, $8);
+        adicionarComandoBloco(bloco, $9); // corpo
         adicionarComandoBloco(bloco, incremento);
         NoAST *loop = criarNoWhile(condicao, bloco);
         NoAST *blocoCompleto = criarNoBloco();
@@ -212,12 +212,20 @@ comando_para:
         free($2);
         $$ = blocoCompleto;
     }
+
+passo_opcional:
+    PASSO expressao { $$ = $2; }
+  | /* vazio */    { $$ = criarNoNum(1); }
 ;
 
 comando_repita:
     REPITA '\n' lista_comandos ATE expressao '\n' FIM_REPITA '\n' {
-        NoAST *condicaoNegada = criarNoOp('!', criarNoNum(1), $5); // Negação da condição
-        $$ = criarNoWhile(condicaoNegada, $3);
+        NoAST *condicaoNegada = criarNoOp('!', criarNoNum(1), $5);
+        NoAST *loop = criarNoWhile(condicaoNegada, $3);
+        NoAST *blocoCompleto = criarNoBloco();
+        adicionarComandoBloco(blocoCompleto, $3);   // Executa 1x
+        adicionarComandoBloco(blocoCompleto, loop); // Depois repete
+        $$ = blocoCompleto;
     }
 ;
 
