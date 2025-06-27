@@ -32,6 +32,7 @@ NoAST *programa_ast = NULL;
 
 %token SE ENTAO SENAO FIM_SE
 %token ENQUANTO FACA IMPRIMA LEIA
+%token PARA ATE REPITA FIM_PARA FIM_REPITA
 %token OR_LOGICO AND_LOGICO NOT_LOGICO
 %token OR_BIT AND_BIT XOR_BIT
 %token IGUAL DIFERENTE MAIOR MAIOR_IGUAL MENOR MENOR_IGUAL
@@ -55,7 +56,7 @@ NoAST *programa_ast = NULL;
 %token <strValue>    IDENTIFICADOR STRING CARACTERE
 
 
-%type <no>           programa lista_comandos comando expressao comando_if comando_while
+%type <no>           programa lista_comandos comando expressao comando_if comando_while comando_para comando_repita
 %type <strValue>     expressao_string
 %type <tipo>         tipo_var
 
@@ -88,6 +89,9 @@ lista_comandos:
   | comando {
         $$ = $1;
     }
+  | comando_para { $$ = $1; }
+  | comando_repita { $$ = $1; }
+
 ;
 
 tipo_var:
@@ -170,6 +174,12 @@ comando:
   | comando_while {
         $$ = $1;
     }
+  | comando_para { 
+        $$ = $1; 
+    }
+  | comando_repita { 
+        $$ = $1; 
+    }
 ;
 
 comando_if:
@@ -184,6 +194,30 @@ comando_if:
 comando_while:
     ENQUANTO expressao FACA '\n' lista_comandos FIM_SE '\n' {
         $$ = criarNoWhile($2, $5);
+    }
+;
+
+comando_para:
+    PARA IDENTIFICADOR ATRIBUICAO expressao ATE expressao '\n' lista_comandos FIM_PARA '\n' {
+        NoAST *inicio = criarNoAtribuicao($2, $4);
+        NoAST *condicao = criarNoOp('L', criarNoId($2, TIPO_INT), $6); // enquanto id <= até
+        NoAST *incremento = criarNoAtribuicao($2, criarNoOp('+', criarNoId($2, TIPO_INT), criarNoNum(1)));
+        NoAST *bloco = criarNoBloco();
+        adicionarComandoBloco(bloco, $8);
+        adicionarComandoBloco(bloco, incremento);
+        NoAST *loop = criarNoWhile(condicao, bloco);
+        NoAST *blocoCompleto = criarNoBloco();
+        adicionarComandoBloco(blocoCompleto, inicio);
+        adicionarComandoBloco(blocoCompleto, loop);
+        free($2);
+        $$ = blocoCompleto;
+    }
+;
+
+comando_repita:
+    REPITA '\n' lista_comandos ATE expressao '\n' FIM_REPITA '\n' {
+        NoAST *condicaoNegada = criarNoOp('!', criarNoNum(1), $5); // Negação da condição
+        $$ = criarNoWhile(condicaoNegada, $3);
     }
 ;
 

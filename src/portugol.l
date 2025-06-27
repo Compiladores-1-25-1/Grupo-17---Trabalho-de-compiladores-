@@ -21,6 +21,11 @@
 "fim-se"        { return FIM_SE; }
 "enquanto"      { return ENQUANTO; }
 "faça"          { return FACA; }
+"para"          { return PARA; }
+"até"           { return ATE; }
+"repita"        { return REPITA; }
+"fim-para"      { return FIM_PARA; }
+"fim-repita"    { return FIM_REPITA; }
 "imprima"       { return IMPRIMA; }
 "leia"          { return LEIA; }
 "ou"            { return OR_LOGICO; }
