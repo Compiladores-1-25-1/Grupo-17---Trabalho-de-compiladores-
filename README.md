@@ -58,8 +58,8 @@
 
 ## :bookmark_tabs: Estrutura do repositório
 
-|
-|
+
+```bash
 ├─ docs/
 |   ├── decisoes-tecnicas.md
 |   ├── definicao-do-projeto.md
@@ -125,6 +125,7 @@
 ├─ README.md
 └──
 
+```
 
 ## :computer:  Como rodar os testes 
 
