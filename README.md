@@ -1,10 +1,11 @@
 # Grupo 17 - Trabalho de compiladores
-## :scroll: Sobre o projeto
+
+## 📜 Sobre o projeto
    Este repositório é dedicado à disciplina de Compiladores 1 ministrada pelo professor Dr. Sérgio Freitas. <br>
    A equipe optou por desenvolver um interpretador de portugol. <br>
    O objetivo deste projeto é desenvolver um interpretador para o pseudocódigo de programação Portugol, voltado para a disciplina de Compiladores. O interpretador foi implementado para ser capaz de ler, interpretar e executar programas simples escritos em Portugol, validando a sintaxe e executando as operações definidas. O interpretador reconhece e executa instruções escritas em Portugol, validando a estrutura sintática e semântica, e executando o programa por meio de uma Árvore Sintática Abstrata (AST).
 
-## :star2: Contribuidores
+## 🌟 Contribuidores
 
 <center>
 <table style="margin-left: auto; margin-right: auto;">
@@ -19,21 +20,21 @@
         <td align="center">
             <a href="https://github.com/esteerlino">
                 <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/90395392?v=4" width="150px;"/>
-                <h5 class="text-center">Ester Flores Lino da Silva </h5>
+                <h5 class="text-center">Ester Flores</h5>
               <h5 class="text-center">202063201</h5>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/GabrielMS00">
                 <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/88348513?v=4" width="150px;"/>
-                <h5 class="text-center">Gabriel Marques de Souza</h5>
+                <h5 class="text-center">Gabriel Marques</h5>
                 <h5 class="text-center">202016266</h5>
             </a>
         </td>
         <td align="center">
             <a href="https://github.com/Manoel835">
                 <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/89036370?v=4" width="150px;"/>
-                <h5 class="text-center">Manoel Felipe Teixeira Neto </h5>
+                <h5 class="text-center">Manoel Felipe</h5>
                 <h5 class="text-center">211041240</h5>
             </a>
         </td>      

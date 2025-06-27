@@ -1,0 +1,15 @@
+booleano x
+booleano y
+booleano r
+
+x <- verdadeiro
+y <- falso
+
+imprima x
+imprima y
+
+r <- x e y
+imprima r
+
+r <- não y
+imprima r

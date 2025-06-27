@@ -1,0 +1,13 @@
+real a
+real b
+real resultado
+
+a <- 7.5
+b <- 2.0
+resultado <- a / b
+imprima ("Divisão:")
+imprima resultado
+
+resultado <- a % b
+imprima ("Módulo:")
+imprima resultado

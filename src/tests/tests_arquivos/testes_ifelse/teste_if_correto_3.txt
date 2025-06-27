@@ -1,0 +1,11 @@
+inteiro x
+
+x <- 3
+
+se x = 3 então
+    imprima "Valor inicial é 3"
+    x <- x + 2
+    se x = 5 então
+        imprima "Agora é 5"
+    fim-se
+fim-se

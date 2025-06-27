@@ -1,0 +1,30 @@
+inteiro a
+inteiro b
+inteiro r
+
+a <- 1
+b <- 0
+
+
+r <- a e b
+imprima r
+
+
+r <- a ou b
+imprima r
+
+
+r <- não a
+imprima r
+
+
+r <- não b
+imprima r
+
+
+r <- (a e b) ou (não b)
+imprima r
+
+
+r <- (a ou b) e (não a)
+imprima r

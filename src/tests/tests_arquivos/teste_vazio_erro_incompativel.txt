@@ -1,0 +1,3 @@
+vazio x
+imprima x     
+x <- 1       

@@ -1,0 +1,8 @@
+inteiro x
+real y
+
+x <- 5
+y <- x * 2.0
+
+imprima x
+imprima y

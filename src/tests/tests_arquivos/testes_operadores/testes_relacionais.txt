@@ -1,0 +1,26 @@
+inteiro x
+x <- 5
+
+se x = 5 então
+    imprima "x é igual a 5"
+fim-se
+
+se x <> 3 então
+    imprima "x é diferente de 3"
+fim-se
+
+se x > 2 então
+    imprima "x é maior que 2"
+fim-se
+
+se x < 10 então
+    imprima "x é menor que 10"
+fim-se
+
+se x >= 5 então
+    imprima "x é maior ou igual a 5"
+fim-se
+
+se x <= 6 então
+    imprima "x é menor ou igual a 6"
+fim-se
