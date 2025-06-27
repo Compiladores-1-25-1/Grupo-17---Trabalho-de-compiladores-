@@ -1,0 +1,3 @@
+para i <- 1 até 3
+    imprima i
+fim-para

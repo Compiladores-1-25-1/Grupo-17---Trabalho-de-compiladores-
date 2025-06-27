@@ -1,0 +1,5 @@
+inteiro i
+para i <- 1 até 5
+    imprima i
+fim-para
+

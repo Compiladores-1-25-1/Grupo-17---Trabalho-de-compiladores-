@@ -1,0 +1,7 @@
+inteiro j
+j <- 5
+repita
+    imprima j
+    j <- j + 1
+até j > 3
+fim-repita
