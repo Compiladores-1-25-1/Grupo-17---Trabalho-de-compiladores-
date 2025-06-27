@@ -67,6 +67,7 @@ Os testes foram organizados para validar diferentes aspectos do compilador de Po
     - testes_ifelse:	Testes com estruturas condicionais se e senao
     - testes_numeros_negativos:	Expressões com números negativos e validação de sinais
     - testes_operadores:	Testes de operadores aritméticos e lógicos (+, -, e, ou, etc)
+    - testes_para_repita: Testes com estruturas de controle para e repita
 - Arquivos de teste individuais
     - teste_booleano.txt:	Testes com valores booleanos (verdadeiro / falso)
     - teste_caractere.txt: 	Declarações e uso de variáveis do tipo char
