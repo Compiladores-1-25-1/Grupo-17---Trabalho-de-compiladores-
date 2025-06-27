@@ -117,6 +117,15 @@
 │                             ├── teste_aritimeticos_incorretos.txt
 │                             ├── testes_relacionais.txt
 │                             └── testes_relacionais_incorretos.txt
+│                  ├── testes_para_repita/
+│                             ├── teste_para_incorrect_1.txt
+│                             ├── teste_para_incorrect_2.txt
+│                             ├── teste_para_ok_1.txt
+│                             ├── teste_para_ok_2.txt
+│                             ├── teste_repita_incorrect_1.txt
+│                             ├── teste_repita_incorrect_2.txt
+│                             ├── teste_repita_ok_1.txt
+│                             └── testes_repita_ok_2.txt
 │                  ├── teste_booleano.txt
 │                  ├── teste_caractere.txt
 │                  ├── teste_correcao_igual_operadores.txt
