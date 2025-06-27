@@ -2,6 +2,10 @@
 *.yy.c
 *.tab.c
 *.tab.h
+<<<<<<< HEAD
+*.out
+.venv
+=======
 
 # Arquivos binários e executáveis
 *.out
@@ -28,3 +32,4 @@ portugol
 .vscode/
 .idea/
 *.sublime-*
+>>>>>>> origin/main

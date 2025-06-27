@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - docs  # Executa apenas quando há push na branch "docs"
+
+permissions:
+  contents: write  # Permite que o workflow escreva no repositório (necessário para publicar no GitHub Pages)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Cache de dependências
+        uses: actions/cache@v3
+        with:
+          path: .cache
+          key: ${{ github.ref }}
+
+      - name: Instalar MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Publicar com MkDocs
+        run: mkdocs gh-deploy --force

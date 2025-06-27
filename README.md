@@ -2,7 +2,8 @@
 
 ## 📜 Sobre o projeto
    Este repositório é dedicado à disciplina de Compiladores 1 ministrada pelo professor Dr. Sérgio Freitas. <br>
-   A equipe optou por desenvolver um interpretador de portugol.
+   A equipe optou por desenvolver um interpretador de portugol. <br>
+   O objetivo deste projeto é desenvolver um interpretador para o pseudocódigo de programação Portugol, voltado para a disciplina de Compiladores. O interpretador foi implementado para ser capaz de ler, interpretar e executar programas simples escritos em Portugol, validando a sintaxe e executando as operações definidas. O interpretador reconhece e executa instruções escritas em Portugol, validando a estrutura sintática e semântica, e executando o programa por meio de uma Árvore Sintática Abstrata (AST).
 
 ## 🌟 Contribuidores
 
@@ -56,18 +57,84 @@
 <hr/>
 
 
-## 📑 Documentação 
+## :bookmark_tabs: Estrutura do repositório
 
-- Ponto de controle 1 
-- Apresentação 1
-- Ponto de controle 2 
-- Apresentação 2
-- Entrega final
-- Entrevista Final
 
-## Como rodar os testes
+```bash
+├─ docs/
+|   ├── decisoes-tecnicas.md
+|   ├── definicao-do-projeto.md
+|   ├── index.md
+|   ├── planejamento-sprints.md
+|   └── planejamento-sprints.md
+├─ src/
+|   ├──  ast.c
+|   ├── ast.h
+|   ├──  portugol.l
+|   ├──  portugol.y
+|   ├──  tabela.c
+|   ├──  tabela.h
+|   ├──  tipos.h
+|   └── tests/
+│         ├── tests.sh
+│         ├── portugol
+│         └── tests_arquivos/
+│                  ├── testes_ast/
+│                             ├── ast_correct_1.txt
+│                             ├── ast_correct_2.txt
+│                             ├── ast_expressao_correta_1.txt
+│                             ├── ast_expressao_correta_2.txt
+│                             ├── ast_expressao_correta_3.txt
+│                             ├── ast_incorrect_1.txt
+│                             ├── ast_incorrect_2.txt
+│                             ├── ast_incorrect_type_1.txt
+│                             └── ast_incorrect_type_2.txt
+│                  ├── testes_basicos/
+│                             ├── imprima_resultado.txt
+│                             ├── teste.txt
+│                             ├── teste_debug.txt
+│                             ├── teste_initial.txt
+│                             └── teste_mensagem.txt
+│                  ├── testes_decimais/
+│                             ├── teste_decimal_correct.txt
+│                             ├── teste_decimal_incorrect.txt
+│                             └── teste_decimal_while.txt
+│                  ├── testes_ifelse/
+│                             ├── teste_if_correto_1.txt
+│                             ├── teste_if_correto_2.txt
+│                             ├── teste_if_correto_3.txt
+│                             ├── teste_if_correto_4.txt
+│                             ├── teste_if_debug.txt
+│                             ├── teste_if_incorreto_1.txt
+│                             ├── teste_if_incorreto_2.txt
+│                             ├── teste_if_incorreto_3.txt
+│                             └── teste_if_while.txt
+│                  ├── testes_numeros_negativos/
+│                             ├── teste_num_negativo_incorrect1.txt
+│                             └── teste_numero_negativo_correct.txt
+│                  ├── testes_operadores/
+│                             ├── teste_aritimeticos.txt
+│                             ├── teste_aritimeticos_incorretos.txt
+│                             ├── testes_relacionais.txt
+│                             └── testes_relacionais_incorretos.txt
+│                  ├── teste_booleano.txt
+│                  ├── teste_caractere.txt
+│                  ├── teste_correcao_igual_operadores.txt
+│                  ├── teste_logico.txt
+│                  └── teste_vazio_erro_incompativel.txt
+├─ mkdocs.yml
+├─ README.md
+└──
 
-* Entre na pasta src/tests: `cd src/tests`
-* Execute o comando: `sh tests.sh`  
+```
 
-**OBS: Para rodar o scrip você deve ter um terminal bash**
+## :computer:  Como rodar os testes 
+
+Depois de clonar o repositório, navegar até as pasta de testes.
+
+```bash
+cd src
+cd testes
+sh tests.sh
+```
+
